@@ -23,7 +23,7 @@
     </head>
     <body class="min-vh-100" style="background: url('flog.png') center center / cover no-repeat;">
 
-        <form action="gui/usuario/UCapaUsuario.jsp" method="post">
+        <form action="gui/Prueba.jsp" method="post">
 
             <!-- ✅ Navbar arriba a la derecha -->
             <nav class="navbar navbar-expand-lg navbar-light bg-light">

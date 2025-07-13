@@ -1,0 +1,299 @@
+
+CREATE TABLE `usuarios` (
+  `id_usuario` int(11) NOT NULL,
+  `nombre` varchar(100) DEFAULT NULL,
+  `correo` varchar(100) DEFAULT NULL,
+  `contrasena` varchar(255) DEFAULT NULL,
+  `rol` enum('admin','tecnico') NOT NULL,
+  `fecha_registro` datetime DEFAULT current_timestamp()
+);
+
+CREATE TABLE `tecnicos` (
+  `id_tecnico` int(11) NOT NULL,
+  `id_usuario` int(11) DEFAULT NULL,
+  `especialidad` varchar(100) DEFAULT NULL,
+  `estado` enum('activo','inactivo') DEFAULT 'activo'
+);
+
+CREATE TABLE `tipo_equipo` (
+  `id_tipo` int(11) NOT NULL,
+  `nombre_tipo` varchar(100) DEFAULT NULL
+);
+
+CREATE TABLE `inventario_general` (
+  `id_inventario` int(11) NOT NULL,
+  `numero` int(11) DEFAULT NULL,
+  `id_tipo` int(11) DEFAULT NULL,
+  `contrato` varchar(100) DEFAULT NULL,
+  `anio_fabricacion` int(11) DEFAULT NULL,
+  `estado` varchar(50) DEFAULT NULL,
+  `marca` varchar(100) DEFAULT NULL,
+  `modelo` varchar(100) DEFAULT NULL,
+  `serie` varchar(100) DEFAULT NULL,
+  `piso` varchar(50) DEFAULT NULL,
+  `ubicacion_area` varchar(100) DEFAULT NULL,
+  `fecha_inventario` date DEFAULT NULL,
+  `id_tecnico_responsable` int(11) DEFAULT NULL,
+  `jefe_sede` varchar(100) DEFAULT NULL,
+  `observaciones` text DEFAULT NULL
+);
+
+CREATE TABLE `inventario_equipos` (
+  `id_inventario` int(11) NOT NULL,
+  `procesador` varchar(100) DEFAULT NULL,
+  `ram` varchar(50) DEFAULT NULL,
+  `disco_duro` varchar(100) DEFAULT NULL,
+  `antivirus` varchar(100) DEFAULT NULL,
+  `nombre_usuario` varchar(100) DEFAULT NULL,
+  `nombre_equipo` varchar(100) DEFAULT NULL,
+  `mac_address` varchar(50) DEFAULT NULL,
+  `seguridad` varchar(100) DEFAULT NULL,
+  `teclado` varchar(50) DEFAULT NULL,
+  `mouse` varchar(50) DEFAULT NULL,
+  `adaptadores` text DEFAULT NULL,
+  `red_hdmi` varchar(50) DEFAULT NULL
+);
+
+CREATE TABLE `inventario_anexos` (
+  `id_inventario` int(11) NOT NULL,
+  `direccion_ip` varchar(50) DEFAULT NULL,
+  `direccion_mac` varchar(50) DEFAULT NULL,
+  `hostname` varchar(100) DEFAULT NULL
+);
+
+CREATE TABLE `inventario_biometrico` (
+  `id_inventario` int(11) NOT NULL,
+  `serie` varchar(100) DEFAULT NULL,
+  `ip_biometrico` varchar(50) DEFAULT NULL,
+  `direccion_mac` varchar(50) DEFAULT NULL
+);
+
+CREATE TABLE `inventario_impresoras` (
+  `id_inventario` int(11) NOT NULL,
+  `ip_impresora` varchar(50) DEFAULT NULL,
+  `direccion_mac` varchar(50) DEFAULT NULL,
+  `hostname` varchar(100) DEFAULT NULL
+);
+
+CREATE TABLE `inventario_panacast` (
+  `id_inventario` int(11) NOT NULL,
+  `direccion_mac` varchar(50) DEFAULT NULL
+);
+
+CREATE TABLE `inventario_proyectores` (
+  `id_inventario` int(11) NOT NULL,
+  `etiqueta` varchar(100) DEFAULT NULL,
+  `hostname` varchar(100) DEFAULT NULL,
+  `direccion_ip` varchar(50) DEFAULT NULL,
+  `direccion_mac` varchar(50) DEFAULT NULL,
+  `hora_luz_fabrica` int(11) DEFAULT NULL,
+  `hora_luz_consumidos` int(11) DEFAULT NULL,
+  `hora_luz_restante` int(11) DEFAULT NULL,
+  `cables` text DEFAULT NULL
+);
+
+CREATE TABLE `inventario_robotica` (
+  `id_inventario` int(11) NOT NULL,
+  `numero_parte` varchar(100) DEFAULT NULL,
+  `series` varchar(100) DEFAULT NULL,
+  `procesador` varchar(100) DEFAULT NULL,
+  `ram` varchar(100) DEFAULT NULL,
+  `disco_solido` varchar(100) DEFAULT NULL,
+  `tarjeta_video` varchar(100) DEFAULT NULL,
+  `modelo_video` varchar(100) DEFAULT NULL,
+  `ram_video` varchar(100) DEFAULT NULL,
+  `cargador` varchar(100) DEFAULT NULL
+);
+
+CREATE TABLE `inventario_televisores` (
+  `id_inventario` int(11) NOT NULL,
+  `direccion_ip` varchar(50) DEFAULT NULL,
+  `direccion_mac` varchar(50) DEFAULT NULL
+);
+
+CREATE TABLE `asistencias` (
+  `id_asistencia` int(11) NOT NULL,
+  `id_tecnico` int(11) DEFAULT NULL,
+  `fecha` date DEFAULT NULL,
+  `hora_entrada` time DEFAULT NULL,
+  `hora_salida` time DEFAULT NULL,
+  `ubicacion` varchar(200) DEFAULT NULL
+);
+
+CREATE TABLE `plantillas` (
+  `id_plantilla` int(11) NOT NULL,
+  `id_tecnico` int(11) DEFAULT NULL,
+  `titulo` varchar(100) DEFAULT NULL,
+  `contenido` text DEFAULT NULL,
+  `visible_admin` tinyint(1) DEFAULT 1
+);
+
+CREATE TABLE `eventos_calendario` (
+  `id_evento` int(11) NOT NULL,
+  `id_plantilla` int(11) DEFAULT NULL,
+  `fecha_evento` date DEFAULT NULL,
+  `descripcion` text DEFAULT NULL
+);
+
+CREATE TABLE `tickets` (
+  `id_ticket` int(11) NOT NULL,
+  `titulo` varchar(200) DEFAULT NULL,
+  `descripcion` text DEFAULT NULL,
+  `estado` enum('abierto','en_proceso','cerrado') DEFAULT 'abierto',
+  `prioridad` enum('baja','media','alta') DEFAULT 'media',
+  `id_usuario` int(11) DEFAULT NULL,
+  `id_tecnico` int(11) DEFAULT NULL,
+  `fecha_creacion` datetime DEFAULT current_timestamp(),
+  `fecha_cierre` datetime DEFAULT NULL
+);
+
+CREATE TABLE `informes` (
+  `id_informe` int(11) NOT NULL,
+  `id_ticket` int(11) DEFAULT NULL,
+  `id_tecnico` int(11) DEFAULT NULL,
+  `contenido` text DEFAULT NULL,
+  `fecha` datetime DEFAULT current_timestamp()
+);
+
+CREATE TABLE `mensajes_chat` (
+  `id_mensaje` int(11) NOT NULL,
+  `emisor` int(11) DEFAULT NULL,
+  `receptor` int(11) DEFAULT NULL,
+  `mensaje` text DEFAULT NULL,
+  `fecha_envio` datetime DEFAULT current_timestamp()
+);
+
+
+CREATE TABLE `sesion` (
+  `id_sesion` int(11) NOT NULL,
+  `id_usuario` int(11) NOT NULL,
+  `fecha_inicio` datetime DEFAULT current_timestamp(),
+  `fecha_fin` datetime DEFAULT NULL,
+  `ip_usuario` varchar(50) DEFAULT NULL,
+  `navegador` varchar(100) DEFAULT NULL,
+  `token_sesion` varchar(255) DEFAULT NULL
+);
+
+
+
+ALTER TABLE `usuarios`
+  ADD PRIMARY KEY (`id_usuario`),
+  ADD UNIQUE KEY `correo` (`correo`);
+
+ALTER TABLE `tecnicos`
+  ADD PRIMARY KEY (`id_tecnico`),
+  ADD KEY `id_usuario` (`id_usuario`);
+
+ALTER TABLE `tipo_equipo`
+  ADD PRIMARY KEY (`id_tipo`);
+
+ALTER TABLE `inventario_general`
+  ADD PRIMARY KEY (`id_inventario`),
+  ADD KEY `id_tipo` (`id_tipo`),
+  ADD KEY `id_tecnico_responsable` (`id_tecnico_responsable`);
+
+
+
+ALTER TABLE `inventario_equipos`
+  ADD PRIMARY KEY (`id_inventario`);
+
+ALTER TABLE `inventario_anexos`
+  ADD PRIMARY KEY (`id_inventario`);
+
+ALTER TABLE `inventario_biometrico`
+  ADD PRIMARY KEY (`id_inventario`);
+
+ALTER TABLE `inventario_impresoras`
+  ADD PRIMARY KEY (`id_inventario`);
+
+ALTER TABLE `inventario_panacast`
+  ADD PRIMARY KEY (`id_inventario`);
+
+ALTER TABLE `inventario_proyectores`
+  ADD PRIMARY KEY (`id_inventario`);
+
+ALTER TABLE `inventario_robotica`
+  ADD PRIMARY KEY (`id_inventario`);
+
+ALTER TABLE `inventario_televisores`
+  ADD PRIMARY KEY (`id_inventario`);
+
+ALTER TABLE `asistencias`
+  ADD PRIMARY KEY (`id_asistencia`),
+  ADD KEY `id_tecnico` (`id_tecnico`);
+
+ALTER TABLE `plantillas`
+  ADD PRIMARY KEY (`id_plantilla`),
+  ADD KEY `id_tecnico` (`id_tecnico`);
+
+ALTER TABLE `eventos_calendario`
+  ADD PRIMARY KEY (`id_evento`),
+  ADD KEY `id_plantilla` (`id_plantilla`);
+
+ALTER TABLE `tickets`
+  ADD PRIMARY KEY (`id_ticket`),
+  ADD KEY `id_usuario` (`id_usuario`),
+  ADD KEY `id_tecnico` (`id_tecnico`);
+
+ALTER TABLE `informes`
+  ADD PRIMARY KEY (`id_informe`),
+  ADD KEY `id_ticket` (`id_ticket`),
+  ADD KEY `id_tecnico` (`id_tecnico`);
+
+ALTER TABLE `mensajes_chat`
+  ADD PRIMARY KEY (`id_mensaje`),
+  ADD KEY `emisor` (`emisor`),
+  ADD KEY `receptor` (`receptor`);
+
+-- AUTO_INCREMENT
+ALTER TABLE `usuarios` MODIFY `id_usuario` int(11) NOT NULL AUTO_INCREMENT;
+ALTER TABLE `tecnicos` MODIFY `id_tecnico` int(11) NOT NULL AUTO_INCREMENT;
+ALTER TABLE `tipo_equipo` MODIFY `id_tipo` int(11) NOT NULL AUTO_INCREMENT;
+ALTER TABLE `inventario_general` MODIFY `id_inventario` int(11) NOT NULL AUTO_INCREMENT;
+ALTER TABLE `asistencias` MODIFY `id_asistencia` int(11) NOT NULL AUTO_INCREMENT;
+ALTER TABLE `plantillas` MODIFY `id_plantilla` int(11) NOT NULL AUTO_INCREMENT;
+ALTER TABLE `eventos_calendario` MODIFY `id_evento` int(11) NOT NULL AUTO_INCREMENT;
+ALTER TABLE `tickets` MODIFY `id_ticket` int(11) NOT NULL AUTO_INCREMENT;
+ALTER TABLE `informes` MODIFY `id_informe` int(11) NOT NULL AUTO_INCREMENT;
+ALTER TABLE `mensajes_chat` MODIFY `id_mensaje` int(11) NOT NULL AUTO_INCREMENT;
+
+-- CLAVES FORÁNEAS
+ALTER TABLE `tecnicos` ADD CONSTRAINT `tecnicos_ibfk_1` FOREIGN KEY (`id_usuario`) REFERENCES `usuarios` (`id_usuario`);
+ALTER TABLE `inventario_general` ADD CONSTRAINT `inventario_general_ibfk_1` FOREIGN KEY (`id_tipo`) REFERENCES `tipo_equipo` (`id_tipo`);
+ALTER TABLE `inventario_general` ADD CONSTRAINT `inventario_general_ibfk_2` FOREIGN KEY (`id_tecnico_responsable`) REFERENCES `tecnicos` (`id_tecnico`);
+ALTER TABLE `inventario_equipos` ADD CONSTRAINT `equipos_fk` FOREIGN KEY (`id_inventario`) REFERENCES `inventario_general` (`id_inventario`);
+ALTER TABLE `inventario_anexos` ADD CONSTRAINT `anexos_fk` FOREIGN KEY (`id_inventario`) REFERENCES `inventario_general` (`id_inventario`);
+ALTER TABLE `inventario_biometrico` ADD CONSTRAINT `biometrico_fk` FOREIGN KEY (`id_inventario`) REFERENCES `inventario_general` (`id_inventario`);
+ALTER TABLE `inventario_impresoras` ADD CONSTRAINT `impresoras_fk` FOREIGN KEY (`id_inventario`) REFERENCES `inventario_general` (`id_inventario`);
+ALTER TABLE `inventario_panacast` ADD CONSTRAINT `panacast_fk` FOREIGN KEY (`id_inventario`) REFERENCES `inventario_general` (`id_inventario`);
+ALTER TABLE `inventario_proyectores` ADD CONSTRAINT `proyectores_fk` FOREIGN KEY (`id_inventario`) REFERENCES `inventario_general` (`id_inventario`);
+ALTER TABLE `inventario_robotica` ADD CONSTRAINT `robotica_fk` FOREIGN KEY (`id_inventario`) REFERENCES `inventario_general` (`id_inventario`);
+ALTER TABLE `inventario_televisores` ADD CONSTRAINT `televisores_fk` FOREIGN KEY (`id_inventario`) REFERENCES `inventario_general` (`id_inventario`);
+ALTER TABLE `asistencias` ADD CONSTRAINT `asistencias_fk` FOREIGN KEY (`id_tecnico`) REFERENCES `tecnicos` (`id_tecnico`);
+ALTER TABLE `plantillas` ADD CONSTRAINT `plantillas_fk` FOREIGN KEY (`id_tecnico`) REFERENCES `tecnicos` (`id_tecnico`);
+ALTER TABLE `eventos_calendario` ADD CONSTRAINT `eventos_fk` FOREIGN KEY (`id_plantilla`) REFERENCES `plantillas` (`id_plantilla`);
+ALTER TABLE `tickets` ADD CONSTRAINT `tickets_fk1` FOREIGN KEY (`id_usuario`) REFERENCES `usuarios` (`id_usuario`);
+ALTER TABLE `tickets` ADD CONSTRAINT `tickets_fk2` FOREIGN KEY (`id_tecnico`) REFERENCES `tecnicos` (`id_tecnico`);
+ALTER TABLE `informes` ADD CONSTRAINT `informes_fk1` FOREIGN KEY (`id_ticket`) REFERENCES `tickets` (`id_ticket`);
+ALTER TABLE `informes` ADD CONSTRAINT `informes_fk2` FOREIGN KEY (`id_tecnico`) REFERENCES `tecnicos` (`id_tecnico`);
+ALTER TABLE `mensajes_chat` ADD CONSTRAINT `mensajes_fk1` FOREIGN KEY (`emisor`) REFERENCES `usuarios` (`id_usuario`);
+ALTER TABLE `mensajes_chat` ADD CONSTRAINT `mensajes_fk2` FOREIGN KEY (`receptor`) REFERENCES `usuarios` (`id_usuario`);
+-- Índices y PK
+ALTER TABLE `sesion`
+  ADD PRIMARY KEY (`id_sesion`),
+  ADD KEY `id_usuario` (`id_usuario`);
+
+-- AUTO_INCREMENT
+ALTER TABLE `sesion` MODIFY `id_sesion` int(11) NOT NULL AUTO_INCREMENT;
+
+-- Foreign Key
+ALTER TABLE `sesion` 
+  ADD CONSTRAINT `sesion_fk_usuario` FOREIGN KEY (`id_usuario`) REFERENCES `usuarios` (`id_usuario`);
+
+
+INSERT INTO usuarios (nombre, correo, contrasena, rol)
+VALUES ('Juan Pérez', 'juan.perez@example.com', '123456', 'admin');
+
+INSERT INTO usuarios (nombre, correo, contrasena, rol)
+VALUES ('Ana López', 'ana.lopez@example.com', 'tecnico123', 'tecnico');
+
