@@ -50,7 +50,7 @@
             </a>
             <div class="collapse" id="gestionMenu">
                 <ul class="nav flex-column ms-4">
-                    <li><a href="#" class="nav-link text-dark px-3 py-1"><i class="bi bi-file-earmark-bar-graph me-2"></i> Informes</a></li>
+                    <li><a href="<%= request.getContextPath()%>/InformesController" class="nav-link text-dark px-3 py-1"><i class="bi bi-file-earmark-bar-graph me-2"></i> Informes</a></li>
                     <li><a href="#" class="nav-link text-dark px-3 py-1"><i class="bi bi-ui-checks-grid me-2"></i> Plantillas</a></li>
                     <li><a href="#" class="nav-link text-dark px-3 py-1"><i class="bi bi-calendar3 me-2"></i> Eventos</a></li>
                 </ul>
@@ -67,7 +67,7 @@
             <div class="collapse" id="ticketsMenu">
                 <ul class="nav flex-column ms-4">
                     <li><a href="#" class="nav-link text-dark px-3 py-1"><i class="bi bi-tools me-2"></i> Gestionar</a></li>
-                    <li><a href="#" class="nav-link text-dark px-3 py-1"><i class="bi bi-person-plus me-2"></i> Asignar</a></li>
+                    <li><a href="<%= request.getContextPath()%>/TicketsController?accion=asignar" class="nav-link text-dark px-3 py-1"><i class="bi bi-person-plus me-2"></i> Asignar</a></li>
                     <li><a href="<%= request.getContextPath()%>/TicketsController?accion=especializado" class="nav-link text-dark px-3 py-1"><i class="bi bi-clock-history me-2"></i> Historial</a></li>
                 </ul>
             </div>

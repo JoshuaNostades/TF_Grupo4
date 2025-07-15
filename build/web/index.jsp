@@ -265,6 +265,7 @@
             <img src="irent.png" alt="Logo" class="me-2" style="width: 40px;">
             <span class="logo-text">Irent Perú</span>
         </div>
+        
         <!-- Top banner with links -->
         <div class="top-banner"></div>
         <div class="top-right-links">

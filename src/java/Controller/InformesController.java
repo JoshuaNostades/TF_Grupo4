@@ -4,8 +4,8 @@
  */
 package Controller;
 
-import BusinessEntity.TicketsBE;
-import BusinessLogic.TicketsBL;
+import BusinessEntity.InformeBE;
+import BusinessLogic.InformesBL;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -17,10 +17,10 @@ import java.util.ArrayList;
 
 /**
  *
- * @author Smile Consulting
+ * @author SOPORTE
  */
-@WebServlet(name = "TicketsController", urlPatterns = {"/TicketsController"})
-public class TicketsController extends HttpServlet {
+@WebServlet(name = "InformesController", urlPatterns = {"/InformesController"})
+public class InformesController extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -39,10 +39,10 @@ public class TicketsController extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet TicketsController</title>");
+            out.println("<title>Servlet InformesController</title>");
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet TicketsController at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet InformesController at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -62,25 +62,12 @@ public class TicketsController extends HttpServlet {
             throws ServletException, IOException {
     
         
-        String accion = request.getParameter("accion");
-
-        if (accion == null || accion.equals("especializado")) {
-
-            TicketsBL BL = new TicketsBL();
-            ArrayList<TicketsBE> listaTickets = BL.ReadAll();
-            request.setAttribute("listaTickets", listaTickets);
-            request.getRequestDispatcher("/usuarios/frmTickets.jsp").forward(request, response);
-
-        } else if (accion == null || accion.equals("asignar")) {
-
-           TicketsBL BL = new TicketsBL();
-            ArrayList<TicketsBE> listaTickets = BL.ReadAll();
-            request.setAttribute("listaTicketsAsignar", listaTickets);
-            request.getRequestDispatcher("/usuarios/frmAsignar.jsp").forward(request, response);
-        } else {
-            // Otra acción o acción desconocida
-            response.sendError(HttpServletResponse.SC_NOT_FOUND, "Acción no reconocida");
-        }
+            InformesBL bl = new InformesBL();
+        ArrayList<InformeBE> listainfo = bl.ReadAll();
+        request.setAttribute("listaInformes", listainfo);
+        request.getRequestDispatcher("/gui/frmInforme.jsp").forward(request, response);
+    
+    
     
     }
 
