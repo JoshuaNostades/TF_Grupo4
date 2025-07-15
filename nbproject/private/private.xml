@@ -3,10 +3,16 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/soporte/Documents/NetBeansProjects/Nueva%20carpeta/TF_Grupo4/web/gui/Principal.jsp</file>
-            <file>file:/C:/Users/soporte/Documents/NetBeansProjects/Nueva%20carpeta/TF_Grupo4/web/usuarios/frmUsuario.jsp</file>
-            <file>file:/C:/Users/soporte/Documents/NetBeansProjects/Nueva%20carpeta/TF_Grupo4/src/java/DataAccessObject/db.properties</file>
-            <file>file:/C:/Users/soporte/Documents/NetBeansProjects/Nueva%20carpeta/TF_Grupo4/src/java/Controller/ListarUsuarioController.java</file>
+            <file>file:/C:/Users/Smile%20Consulting/Documents/NetBeansProjects/TF_Grupo4/src/java/DataAccessObject/TipoEquipoDAO.java</file>
+            <file>file:/C:/Users/Smile%20Consulting/Documents/NetBeansProjects/TF_Grupo4/web/usuarios/frmListarAsistencia.jsp</file>
+            <file>file:/C:/Users/Smile%20Consulting/Documents/NetBeansProjects/TF_Grupo4/web/usuarios/frmUsuario.jsp</file>
+            <file>file:/C:/Users/Smile%20Consulting/Documents/NetBeansProjects/TF_Grupo4/src/java/BusinessEntity/AsistenciaBE.java</file>
+            <file>file:/C:/Users/Smile%20Consulting/Documents/NetBeansProjects/TF_Grupo4/src/java/DataAccessObject/AsistenciaDAO.java</file>
+            <file>file:/C:/Users/Smile%20Consulting/Documents/NetBeansProjects/TF_Grupo4/src/java/Controller/AsistenciaController.java</file>
+            <file>file:/C:/Users/Smile%20Consulting/Documents/NetBeansProjects/TF_Grupo4/src/java/Controller/ListarUsuarioController.java</file>
+            <file>file:/C:/Users/Smile%20Consulting/Documents/NetBeansProjects/TF_Grupo4/src/java/Controller/TicketsController.java</file>
+            <file>file:/C:/Users/Smile%20Consulting/Documents/NetBeansProjects/TF_Grupo4/web/usuarios/frmTickets.jsp</file>
+            <file>file:/C:/Users/Smile%20Consulting/Documents/NetBeansProjects/TF_Grupo4/web/gui/Principal.jsp</file>
         </group>
     </open-files>
 </project-private>

@@ -1,109 +1,360 @@
-<%-- 
-    Document   : index
-    Created on : 07/05/2025, 11:31:49 AM
-    Author     : alumno
---%>
-
-<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@page import="BusinessEntity.UsuarioBE"%>
+<%@page import="DataAccessObject.UsuarioDAO"%>
+<%@ page contentType="text/html;charset=UTF-8" %>
 <!DOCTYPE html>
-<html>
+<html lang="en">
     <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>JSP Page</title>
+        <meta charset="UTF-8">
+        <title>Login - Sweet</title>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.4/dist/css/bootstrap.min.css" rel="stylesheet">
+        <style>
 
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
-        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js" integrity="sha384-7+zCNj/IqJ95wo16oMtfsKbZ9ccEh31eOz1HGyDuCQ6wgnyJNSYdrPa03rtR1zdB" crossorigin="anonymous"></script>
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js" integrity="sha384-QJHtvGhmr9XOIpI6YVutG+2QOK9T+ZnN4kzFN1RtK3zEFEIsxhlmWl5/YESvpZ13" crossorigin="anonymous"></script>
+            * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+            }
+
+            /* El body y html deben ocupar toda la pantalla */
+            html, body {
+                height: 100%;
+                overflow: hidden; /* Oculta cualquier scroll */
+            }
+
+            /* Asegura que el fondo y login-container usen altura completa */
+            .full-screen-bg {
+                height: 100vh;
+                display: flex;
+                flex-direction: column;
+            }
+
+            .login-container {
+                flex-grow: 1;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
 
 
+            body {
+                background: linear-gradient(135deg, #f9f9f9 0%, #ffffff 100%);
+                min-height: 100vh;
+                font-family: 'Segoe UI', sans-serif;
+            }
 
+            .login-container {
+                max-width: 400px;
+                margin: 5% auto;
+                padding: 40px;
+                background: white;
+                border-radius: 20px;
+                box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+                text-align: center;
+            }
 
+            .brand-logo {
+                width: 60px;
+                margin-bottom: 20px;
+            }
 
+            .login-title {
+                font-size: 32px;
+                font-weight: bold;
+                color: #444;
+            }
+
+            .forgot-link {
+                color: #ec4d79;
+                font-size: 14px;
+                display: block;
+                margin-top: 10px;
+            }
+
+            .btn-gradient {
+                background: linear-gradient(to right, #EF7878, #EF7878);
+                border: none;
+                color: white;
+                font-weight: bold;
+            }
+
+            .btn-gradient:hover {
+                opacity: 0.9;
+            }
+
+            .top-right-links {
+                position: absolute;
+                top: 20px;
+                right: 30px;
+            }
+
+            .top-right-links a {
+                margin-left: 15px;
+                color: #fff;
+                font-weight: bold;
+                text-decoration: none;
+            }
+
+            .top-banner {
+                position: absolute;
+                top: 0;
+                right: 0;
+                background: linear-gradient(135deg, #EF7878, #ff5c5c);
+                width: 50%;
+                height: 200px;
+                border-bottom-left-radius: 50% 40%;
+                z-index: -1;
+            }
+
+            .color-dots {
+                position: absolute;
+                bottom: 50px;
+                right: 50px;
+            }
+
+            .circle {
+                border-radius: 50%;
+                position: absolute;
+            }
+            .top-right-links a {
+                margin-left: 15px;
+                color: #fff;
+                font-weight: bold;
+                text-decoration: none;
+                position: relative;
+                padding: 6px 10px;
+                border-radius: 8px;
+                transition: background-color 0.3s ease;
+            }
+
+            .top-right-links a:hover {
+                background-color: #fff3cd; /* fondo amarillo claro tipo "highlight" */
+                color: #000;               /* texto oscuro cuando se pasa el mouse */
+            }
+
+            .logo-top-left {
+                position: absolute;
+                top: 20px;
+                left: 30px;
+                z-index: 10;
+            }
+
+            .logo-text {
+                font-size: 24px;
+                font-weight: bold;
+                color: #504e4e; /* morado elegante */
+            }
+
+            .login-heading {
+                font-size: 32px;
+                font-weight: 700;
+                color: #3e3f5e;
+                position: relative;
+                display: inline-block;
+                margin-bottom: 10px;
+            }
+
+            .login-heading::after {
+                content: "";
+                display: block;
+                width: 100%;
+                height: 4px;
+                margin-top: 8px;
+                border-radius: 2px;
+                background: linear-gradient(to right, #ff9a9e, #fad0c4, #fad0c4, #a1c4fd, #c2e9fb);
+            }
+
+            .circle1 {
+                background-color: #ffb347;
+                width: 60px;
+                height: 60px;
+                right: 0;
+                bottom: 60px;
+            }
+            .circle2 {
+                background-color: #00c3ff;
+                width: 100px;
+                height: 100px;
+                right: 80px;
+                bottom: 0;
+            }
+            .circle3 {
+                background-color: #0080ff;
+                width: 60px;
+                height: 60px;
+                right: 130px;
+                bottom: 80px;
+            }
+            .form-select:focus {
+                border-color: #6f42c1;
+                box-shadow: 0 0 0 0.25rem rgba(111, 66, 193, 0.25);
+            }
+
+            .form-check-input:checked {
+                background-color: #dc3545; /* rojo Bootstrap */
+                border-color: #dc3545;
+            }
+
+            /* Cambiar el color del checkbox en foco */
+            .form-check-input:focus {
+                border-color: #dc3545;
+                box-shadow: 0 0 0 0.25rem rgba(220, 53, 69, 0.25);
+            }
+        </style>
     </head>
-    <body class="min-vh-100" style="background: url('flog.png') center center / cover no-repeat;">
 
-        <form action="gui/Prueba.jsp" method="post">
 
-            <!-- ✅ Navbar arriba a la derecha -->
-            <nav class="navbar navbar-expand-lg navbar-light bg-light">
-                <div class="container-fluid justify-content-end">
-                    <a class="navbar-brand me-auto" href="#">Irent</a>
-                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarScroll" aria-controls="navbarScroll" aria-expanded="false" aria-label="Toggle navigation">
-                        <span class="navbar-toggler-icon"></span>
-                    </button>
-                    <div class="collapse navbar-collapse justify-content-end" id="navbarScroll">
-                        <ul class="navbar-nav navbar-nav-scroll">
-                            <li class="nav-item">
-                                <a class="nav-link active" href="#">Contáctenos</a>
-                            </li>
-                            <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle" href="#" id="navbarScrollingDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                    Solicitar requerimiento
-                                </a>
-                                <ul class="dropdown-menu" aria-labelledby="navbarScrollingDropdown">
-                                    <li><a class="dropdown-item" href="#">Soy Cliente</a></li>
-                                    <li><a class="dropdown-item" href="#">Cuenta bloqueada</a></li>
-                                </ul>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link disabled">INICIO DE SESION - SOPORTE TÉCNICO</a>
-                            </li>
-                        </ul>
-                    </div>
+    <body class="full-screen-bg">
+
+        <%
+
+            String usuario = null;
+
+            if (session != null) {
+                usuario = (String) session.getAttribute("usuario");
+            }
+
+            if (usuario == null) {
+                // Buscar cookie
+                Cookie[] cookies = request.getCookies();
+                if (cookies != null) {
+                    for (Cookie c : cookies) {
+                        if ("usuarioRecordado".equals(c.getName())) {
+                            String usuarioRecordado = c.getValue();
+
+                            UsuarioDAO dao = new UsuarioDAO();
+                            UsuarioBE usuarioBE = dao.buscarPorCorreo(c.getValue());
+                            if (usuarioBE != null) {
+                                session.setAttribute("rol", usuarioBE.getRol());
+
+                                switch (usuarioBE.getRol()) {
+                                    case "Administrativo":
+                                        response.sendRedirect("/gui/Principal.jsp");
+                                        break;
+                                    case "Soporte tecnico":
+                                        response.sendRedirect("/gui/Principal.jsp");
+                                        break;
+                                    case "Soporte especializado":
+                                        response.sendRedirect("ListarUsuarioController");
+                                        break;
+                                }
+                                return;
+                            }
+                        }
+                    }
+                }
+            } else {
+                // Si ya hay sesión activa
+                String rol = (String) session.getAttribute("rol");
+                switch (rol) {
+                    case "Administrativo":
+                        response.sendRedirect("/gui/Principal.jsp");
+                        return;
+                    case "Soporte tecnico":
+                        response.sendRedirect("/gui/Principal.jsp");
+                        return;
+                    case "Soporte especializado":
+                        response.sendRedirect("ListarUsuarioController");
+                        return;
+                }
+            }
+
+            // Si llegas aquí, no redirigiste y solo estás mostrando el login
+        %>
+
+        <div class="logo-top-left d-flex align-items-center">
+            <img src="irent.png" alt="Logo" class="me-2" style="width: 40px;">
+            <span class="logo-text">Irent Perú</span>
+        </div>
+        <!-- Top banner with links -->
+        <div class="top-banner"></div>
+        <div class="top-right-links">
+            <a href="#">Nostros</a>
+
+            <a href="#">Activacion de cuenta</a>
+
+        </div>
+
+        <!-- Login Form -->
+        <div class="login-container">
+            <div class="login-card">
+                <h2 class="login-heading">Inicio de sesión</h2>
+                <p>Bienvenido a irentForms, configura tu sistema a tu gusto</p>
+
+                <a href="#" class="forgot-link">¿Olvidaste tu contraseña?</a>
+
+                <br>
+                <%                    String error = request.getParameter("error");
+                    if (error != null) {
+                        String mensaje = "";
+                        switch (error) {
+                            case "campos":
+                                mensaje = "⚠️ Todos los campos son obligatorios.";
+                                break;
+                            case "credenciales":
+                                mensaje = "❌ Usuario, contraseña o rol incorrecto.";
+                                break;
+                            case "conexion":
+                                mensaje = "❌ Error al conectar con la base de datos.";
+                                break;
+                            case "rol":
+                                mensaje = "❌ El rol seleccionado no tiene acceso.";
+                                break;
+                            case "sesion":
+                                mensaje = "⚠️ Debes iniciar sesión para acceder al sistema.";
+                                break;
+                            default:
+                                mensaje = "❌ Ha ocurrido un error inesperado.";
+                        }
+                %>
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    <%= mensaje%>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
                 </div>
-            </nav>
-
-
-            <div class="position-fixed end-0 mt-5 me-4" style="top: 3rem; bottom: 3rem; width: 41%;">
-                <div class="card h-100 w-100 rounded-start border-1 shadow-sm">
-                    <div class="card-body d-flex justify-content-center align-items-center text-center">
-                        <div class="container">
-                            <div class="row justify-content-center">
-                                <div class="col-12 col-md-8 col-lg-6">
-                                    <img src="iRent.png" class="img-fluid mb-1" alt="...">
-
-                                    <h3 class="card-title mt-2 mb-5">Inicio de sesión</h3>
-
-                                    <div class="form-floating mb-3">
-                                        <input type="email" class="form-control" id="floatingInput" placeholder="name@example.com">
-                                        <label for="floatingInput">Correo</label>
-                                    </div>
-
-                                    <div class="form-floating mb-4">
-                                        <input type="password" class="form-control" id="floatingPassword" placeholder="Password">
-                                        <label for="floatingPassword">Contraseña</label>
-                                    </div>
-
-                                    <div class="d-flex justify-content-between align-items-center mb-5 small">
-                                        <div class="form-check">
-                                            <input class="form-check-input" type="checkbox" id="rememberCheck">
-                                            <label class="form-check-label" for="rememberCheck">
-                                                Guardar contraseña
-                                            </label>
-                                        </div>
-                                        <a href="#" class="text-decoration-none">¿Olvidaste tu contraseña?</a>
-                                    </div>
-
-                                    <button type="submit" class="btn btn-danger btn-lg w-100">ENTRAR</button>
-
-                                </div>
-                            </div>
-                        </div>
-
+                <%
+                    }
+                %>
+                <form action="<%= request.getContextPath()%>/LoginUsuarioServlet" method="post">
+                    <div class="form-floating mt-3">
+                        <input type="text" class="form-control" id="username" name="username" placeholder="Username" required>
+                        <label for="username">Correo</label>
                     </div>
-                </div>
+                    <div class="form-floating mt-3">
+                        <input type="password" class="form-control" id="password" name="password" placeholder="Password" required>
+                        <label for="password">Contraseña</label>
+                    </div>
+
+                    <div class="form-floating mt-3">
+                        <select class="form-select" id="role" name="role" required>
+
+                            <option value="Administrativo">Administrativo</option>
+                            <option value="Soporte tecnico">Soporte técnico</option>
+                            <option value="Soporte especializado">Soporte especializado</option>
+
+
+                        </select>
+
+                        <label for="role">Seleccione su area</label>
+                    </div>
+
+                    <div class="form-check text-start mt-3 ms-1">
+                        <input class="form-check-input" type="checkbox" value="true" id="rememberMe" name="rememberMe">
+                        <label class="form-check-label" for="rememberMe">
+                            Mantener sesión iniciada
+                        </label>
+                    </div>
+
+                    <button type="submit" class="btn btn-gradient btn-lg w-100 mt-4">Continuar</button>
+                </form>
             </div>
+        </div>
 
+        <!-- Color dots decoration -->
+        <div class="color-dots">
+            <div class="circle circle1"></div>
+            <div class="circle circle2"></div>
+            <div class="circle circle3"></div>
+        </div>
 
-
-
-
-
-
-
-            <!-- Bootstrap JS (necesario para que funcione el dropdown y el botón colapsable) -->
-            <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
-        </form>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.4/dist/js/bootstrap.bundle.min.js"></script>
     </body>
 </html>

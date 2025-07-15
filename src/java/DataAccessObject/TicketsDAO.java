@@ -25,7 +25,7 @@ public class TicketsDAO extends ConexionMySQL implements IBaseDAO<TicketsBE> {
             PreparedStatement ps = getConnection().prepareStatement(sql);
 
             ps.setInt(1, input.getIdUsuario());
-            ps.setString(2, input.getAsunto());
+          
             ps.setString(3, input.getDescripcion());
             ps.setString(4, input.getEstado());
             ps.setTimestamp(5, new java.sql.Timestamp(input.getFechaCreacion().getTime()));
@@ -55,30 +55,34 @@ public class TicketsDAO extends ConexionMySQL implements IBaseDAO<TicketsBE> {
 
     @Override
     public ArrayList<TicketsBE> ReadAll() {
+    ArrayList<TicketsBE> lista = new ArrayList<>();
+    String sql = "SELECT * FROM tickets";
 
-        ArrayList<TicketsBE> lista = new ArrayList<>();
-        String sql = "SELECT * FROM tickets ORDER BY fecha_creacion DESC";
-        try {
-            PreparedStatement ps = getConnection().prepareStatement(sql);
-            ResultSet rs = ps.executeQuery();
+    try (
+        Connection con = getConnection();
+        PreparedStatement ps = con.prepareStatement(sql);
+        ResultSet rs = ps.executeQuery();
+    ) {
+        while (rs.next()) {
+            TicketsBE t = new TicketsBE();
+            t.setIdTicket(rs.getInt("id_ticket"));
+            t.setTitulo(rs.getString("titulo"));
+            t.setDescripcion(rs.getString("descripcion"));
+            t.setEstado(rs.getString("estado"));
+            t.setPrioridad(rs.getString("prioridad"));
+            t.setIdUsuario(rs.getInt("id_usuario"));
+            t.setIdTecnico(rs.getInt("id_tecnico"));
+            t.setFechaCreacion(rs.getDate("fecha_creacion"));
+            t.setFechaCierre(rs.getDate("fecha_cierre"));
 
-            while (rs.next()) {
-                TicketsBE t = new TicketsBE();
-                t.setIdTicket(rs.getInt("id_ticket"));
-                t.setIdUsuario(rs.getInt("id_usuario"));
-                t.setAsunto(rs.getString("asunto"));
-                t.setDescripcion(rs.getString("descripcion"));
-                t.setEstado(rs.getString("estado"));
-                t.setFechaCreacion(rs.getTimestamp("fecha_creacion"));
-                lista.add(t);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-
+            lista.add(t);
         }
-        return lista;
-
+    } catch (Exception e) {
+        e.printStackTrace();
     }
+
+    return lista;
+}
 
     @Override
     public boolean Update(TicketsBE input) {
@@ -87,7 +91,7 @@ public class TicketsDAO extends ConexionMySQL implements IBaseDAO<TicketsBE> {
         try {
             PreparedStatement ps = getConnection().prepareStatement(sql);
 
-            ps.setString(1, input.getAsunto());
+        
             ps.setString(2, input.getDescripcion());
             ps.setString(3, input.getEstado());
             ps.setInt(4, input.getIdTicket());

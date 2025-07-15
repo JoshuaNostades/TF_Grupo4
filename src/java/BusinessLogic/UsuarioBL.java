@@ -41,4 +41,10 @@ public class UsuarioBL implements IBaseBL<UsuarioBE> {
         return DAO.Delete(input);
     }
 
+    public ArrayList<UsuarioBE> ReadAllSoporte() {
+
+        UsuarioDAO DAO = new UsuarioDAO();
+        return DAO.ReadAllSoporte();
+    }
+
 }

@@ -41,14 +41,22 @@ public class ConexionMySQL {
         }
     }
 
-    // Método público para obtener la conexión
+   
     public static Connection getConnection() throws SQLException {
-        Connection conn = DriverManager.getConnection(url, user, password);
-        if (conn == null || conn.isClosed()) {
-            throw new SQLException("Conexion fallida");
-        }
-        return conn;
+    try {
+        // Registrar el driver
+        Class.forName("com.mysql.cj.jdbc.Driver");
+    } catch (ClassNotFoundException e) {
+        System.err.println("❌ No se encontró el driver de MySQL: " + e.getMessage());
+        throw new SQLException("No se encontró el driver de MySQL");
     }
+
+    Connection conn = DriverManager.getConnection(url, user, password);
+    if (conn == null || conn.isClosed()) {
+        throw new SQLException("❌ Conexión fallida");
+    }
+    return conn;
+}
 
     public static void main(String[] args) {
 

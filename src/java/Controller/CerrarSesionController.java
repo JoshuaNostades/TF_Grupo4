@@ -4,23 +4,23 @@
  */
 package Controller;
 
-import BusinessEntity.UsuarioBE;
-import BusinessLogic.UsuarioBL;
+import DataAccessObject.UsuarioDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import java.util.ArrayList;
+import jakarta.servlet.http.HttpSession;
 
 /**
  *
- * @author SOPORTE
+ * @author Smile Consulting
  */
-@WebServlet(name = "ListarUsuarioController", urlPatterns = {"/ListarUsuarioController"})
-public class ListarUsuarioController extends HttpServlet {
+@WebServlet(name = "CerrarSesionController", urlPatterns = {"/CerrarSesionController"})
+public class CerrarSesionController extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -39,10 +39,10 @@ public class ListarUsuarioController extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet ListarUsuarioController</title>");
+            out.println("<title>Servlet CerrarSesionController</title>");
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet ListarUsuarioController at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet CerrarSesionController at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -61,26 +61,27 @@ public class ListarUsuarioController extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        String accion = request.getParameter("accion");
+        // 1. Invalidar la sesión actual
+        HttpSession session = request.getSession(false);
 
-        if (accion == null || accion.equals("administrativo")) {
-
-            UsuarioBL usuarioBL = new UsuarioBL();
-            ArrayList<UsuarioBE> listaUsuarios = usuarioBL.ReadAll();
-            request.setAttribute("listaUsuarios", listaUsuarios);
-            request.getRequestDispatcher("/usuarios/frmUsuario.jsp").forward(request, response);
-
-        } else if (accion == null || accion.equals("soporte")) {
-
-            UsuarioBL usuarioBL = new UsuarioBL();
-            ArrayList<UsuarioBE> listaUsuarios = usuarioBL.ReadAllSoporte();
-            request.setAttribute("listaUsuarios", listaUsuarios);
-            request.getRequestDispatcher("/usuarios/frmUsuario.jsp").forward(request, response);
-
-        } else {
-            // Otra acción o acción desconocida
-            response.sendError(HttpServletResponse.SC_NOT_FOUND, "Acción no reconocida");
+        if (session != null) {
+            Integer idSesion = (Integer) session.getAttribute("idSesion");
+            if (idSesion != null) {
+                UsuarioDAO dao = new UsuarioDAO();
+                dao.registrarCierreSesion(idSesion);
+            }
+            session.invalidate();
         }
+
+        // 2. Eliminar cookie de sesión persistente
+        Cookie c = new Cookie("usuarioRecordado", "");
+        c.setMaxAge(0); // Eliminar cookie
+        c.setPath("/"); // Mismo path que al crearla
+        response.addCookie(c);
+
+        // 3. Redirigir a la página de inicio
+        response.sendRedirect("index.jsp");
+
     }
 
     /**
@@ -94,6 +95,9 @@ public class ListarUsuarioController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+
+        doGet(request, response);
+
     }
 
     /**
@@ -103,7 +107,7 @@ public class ListarUsuarioController extends HttpServlet {
      */
     @Override
     public String getServletInfo() {
-        return "Short description";
+        return "Controlador para cerrar sesión y limpiar cookies";
     }// </editor-fold>
 
 }

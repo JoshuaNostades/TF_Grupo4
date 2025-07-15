@@ -2,24 +2,42 @@
 package BusinessEntity;
 
 import java.security.Timestamp;
+import java.sql.Date;
 
 
 public class TicketsBE {
     
     private int idTicket;
-    private int idUsuario;   // cliente que genera el ticket
-    private String asunto;
+    private String titulo;
     private String descripcion;
-    private String estado;   // Ej: "Abierto", "En proceso", "Cerrado"
-    private java.sql.Timestamp fechaCreacion;
+    private String estado;  
+    private String prioridad;
+    private int idUsuario;
+    private int idTecnico;
+    private java.sql.Date fechaCreacion;
+    private java.sql.Date fechaCierre;
 
-    public TicketsBE(int idTicket, int idUsuario, String asunto, String descripcion, String estado, java.sql.Timestamp fechaCreacion) {
+    public TicketsBE(int idTicket, String titulo, String descripcion, String estado, String prioridad, int idUsuario, int idTecnico, Date fechaCreacion, Date fechaCierre) {
         this.idTicket = idTicket;
-        this.idUsuario = idUsuario;
-        this.asunto = asunto;
+        this.titulo = titulo;
         this.descripcion = descripcion;
         this.estado = estado;
+        this.prioridad = prioridad;
+        this.idUsuario = idUsuario;
+        this.idTecnico = idTecnico;
         this.fechaCreacion = fechaCreacion;
+        this.fechaCierre = fechaCierre;
+    }
+
+    public TicketsBE(String titulo, String descripcion, String estado, String prioridad, int idUsuario, int idTecnico, Date fechaCreacion, Date fechaCierre) {
+        this.titulo = titulo;
+        this.descripcion = descripcion;
+        this.estado = estado;
+        this.prioridad = prioridad;
+        this.idUsuario = idUsuario;
+        this.idTecnico = idTecnico;
+        this.fechaCreacion = fechaCreacion;
+        this.fechaCierre = fechaCierre;
     }
 
     public TicketsBE() {
@@ -33,20 +51,12 @@ public class TicketsBE {
         this.idTicket = idTicket;
     }
 
-    public int getIdUsuario() {
-        return idUsuario;
+    public String getTitulo() {
+        return titulo;
     }
 
-    public void setIdUsuario(int idUsuario) {
-        this.idUsuario = idUsuario;
-    }
-
-    public String getAsunto() {
-        return asunto;
-    }
-
-    public void setAsunto(String asunto) {
-        this.asunto = asunto;
+    public void setTitulo(String titulo) {
+        this.titulo = titulo;
     }
 
     public String getDescripcion() {
@@ -65,14 +75,50 @@ public class TicketsBE {
         this.estado = estado;
     }
 
-    public java.sql.Timestamp getFechaCreacion() {
+    public String getPrioridad() {
+        return prioridad;
+    }
+
+    public void setPrioridad(String prioridad) {
+        this.prioridad = prioridad;
+    }
+
+    public int getIdUsuario() {
+        return idUsuario;
+    }
+
+    public void setIdUsuario(int idUsuario) {
+        this.idUsuario = idUsuario;
+    }
+
+    public int getIdTecnico() {
+        return idTecnico;
+    }
+
+    public void setIdTecnico(int idTecnico) {
+        this.idTecnico = idTecnico;
+    }
+
+    public Date getFechaCreacion() {
         return fechaCreacion;
     }
 
-    public void setFechaCreacion(java.sql.Timestamp fechaCreacion) {
+    public void setFechaCreacion(Date fechaCreacion) {
         this.fechaCreacion = fechaCreacion;
     }
 
+    public Date getFechaCierre() {
+        return fechaCierre;
+    }
+
+    public void setFechaCierre(Date fechaCierre) {
+        this.fechaCierre = fechaCierre;
+    }
     
+    
+    
+    
+    
+
     
 }

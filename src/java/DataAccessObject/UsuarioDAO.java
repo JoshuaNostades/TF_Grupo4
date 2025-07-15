@@ -58,7 +58,7 @@ public class UsuarioDAO extends ConexionMySQL implements IBaseDAO<UsuarioBE> {
             PreparedStatement ps = getConnection().prepareStatement(sql);
 
             ps.setString(1, usuario);
-           
+
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
                     UsuarioBE u = new UsuarioBE();
@@ -82,7 +82,33 @@ public class UsuarioDAO extends ConexionMySQL implements IBaseDAO<UsuarioBE> {
     public ArrayList<UsuarioBE> ReadAll() {
 
         ArrayList<UsuarioBE> lista = new ArrayList<>();
-        String sql = "SELECT * FROM usuarios ORDER BY nombre ASC";
+        String sql = "SELECT * FROM usuarios where rol = 'Administrativo'";
+        try {
+            PreparedStatement ps = getConnection().prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                UsuarioBE u = new UsuarioBE();
+                u.setIdUsuario(rs.getInt("id_usuario"));
+                u.setNombre(rs.getString("nombre"));
+                u.setCorreo(rs.getString("correo"));
+                u.setContrasena(rs.getString("contrasena"));
+                u.setRol(rs.getString("rol"));
+                lista.add(u);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+
+        }
+
+        return lista;
+    }
+    
+     public ArrayList<UsuarioBE> ReadAllSoporte() {
+
+        ArrayList<UsuarioBE> lista = new ArrayList<>();
+        String sql = "SELECT * FROM usuarios where rol = 'Soporte tecnico'";
         try {
             PreparedStatement ps = getConnection().prepareStatement(sql);
             ResultSet rs = ps.executeQuery();
@@ -140,6 +166,78 @@ public class UsuarioDAO extends ConexionMySQL implements IBaseDAO<UsuarioBE> {
             System.out.println(e.getMessage());
         }
         return r;
+    }
+
+    public boolean validarUsuario(String username, String password, String role) {
+        String sql = "SELECT * FROM usuarios WHERE correo=? AND contrasena=? AND rol=?";
+
+        try {
+            PreparedStatement ps = getConnection().prepareStatement(sql);
+
+            ps.setString(1, username);
+            ps.setString(2, password);
+            ps.setString(3, role);
+
+            ResultSet rs = ps.executeQuery();
+            return rs.next(); // Retorna true si encuentra el usuario
+        } catch (SQLException e) {
+            System.out.println("Error al validar usuario: " + e.getMessage());
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public UsuarioBE buscarPorCorreo(String correo) {
+        String sql = "SELECT * FROM usuarios WHERE correo = ?";
+        try {
+            PreparedStatement ps = getConnection().prepareStatement(sql);
+            ps.setString(1, correo);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                UsuarioBE u = new UsuarioBE();
+                u.setIdUsuario(rs.getInt("id_usuario"));
+                u.setNombre(rs.getString("nombre"));
+                u.setCorreo(rs.getString("correo"));
+                u.setContrasena(rs.getString("contrasena"));
+                u.setRol(rs.getString("rol"));
+                return u;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public void registrarCierreSesion(int idSesion) {
+        String sql = "UPDATE sesion SET fecha_fin = NOW() WHERE id_sesion = ?";
+        try {
+            PreparedStatement ps = getConnection().prepareStatement(sql);
+            ps.setInt(1, idSesion);
+            ps.executeUpdate();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public int registrarInicioSesion(int idUsuario, String ip, String navegador, String token) {
+        int idGenerado = -1;
+        String sql = "INSERT INTO sesion (id_usuario, ip_usuario, navegador, token_sesion) VALUES (?, ?, ?, ?)";
+        try {
+            PreparedStatement ps = getConnection().prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+            ps.setInt(1, idUsuario);
+            ps.setString(2, ip);
+            ps.setString(3, navegador);
+            ps.setString(4, token);
+            ps.executeUpdate();
+
+            ResultSet rs = ps.getGeneratedKeys();
+            if (rs.next()) {
+                idGenerado = rs.getInt(1); // ID de la nueva sesión
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return idGenerado;
     }
 
 }

@@ -15,11 +15,16 @@
         <span class="fs-2 fw-semibold text-dark text-center">IrentForms</span>
     </div>
 
-    <div class="text-muted mb-3 text-center fs-7 fw-semibold">Tecnico 01</div>
+    <div class="text-muted mb-3 text-center fs-7 fw-semibold">
+        <%= session.getAttribute("usuario")%>
+    </div>
     <hr>
-
+    <%
+        String rol = (String) session.getAttribute("rol");
+    %>
     <ul class="nav nav-pills flex-column gap-1" >
 
+        <% if ("Soporte especializado".equals(rol)) {%>
         <!-- INICIO -->
         <li class="nav-item">
             <a class="nav-link d-flex justify-content-between align-items-center text-dark px-3 py-2"
@@ -63,7 +68,7 @@
                 <ul class="nav flex-column ms-4">
                     <li><a href="#" class="nav-link text-dark px-3 py-1"><i class="bi bi-tools me-2"></i> Gestionar</a></li>
                     <li><a href="#" class="nav-link text-dark px-3 py-1"><i class="bi bi-person-plus me-2"></i> Asignar</a></li>
-                    <li><a href="#" class="nav-link text-dark px-3 py-1"><i class="bi bi-clock-history me-2"></i> Historial</a></li>
+                    <li><a href="<%= request.getContextPath()%>/TicketsController?accion=especializado" class="nav-link text-dark px-3 py-1"><i class="bi bi-clock-history me-2"></i> Historial</a></li>
                 </ul>
             </div>
         </li>
@@ -77,7 +82,7 @@
             </a>
             <div class="collapse" id="usuariosMenu">
                 <ul class="nav flex-column ms-4">
-                    <li><a href="<%= request.getContextPath() %>/ListarUsuarioController" class="nav-link text-dark px-3 py-1"><i class="bi bi-list-ul me-2"></i> Listar</a></li>
+                    <li><a href="<%= request.getContextPath()%>/ListarUsuarioController?accion=administrativo" class="nav-link text-dark px-3 py-1"><i class="bi bi-list-ul me-2"></i> Listar</a></li>
                     <li><a href="#" class="nav-link text-dark px-3 py-1"><i class="bi bi-person-plus-fill me-2"></i> Asignar</a></li>
                 </ul>
             </div>
@@ -92,10 +97,10 @@
             </a>
             <div class="collapse" id="tecnicosMenu">
                 <ul class="nav flex-column ms-4">
-                    <li><a href="#" class="nav-link text-dark px-3 py-1"><i class="bi bi-eye me-2"></i> Visualización</a></li>
+                    <li><a href="<%= request.getContextPath()%>/ListarUsuarioController?accion=soporte" class="nav-link text-dark px-3 py-1"><i class="bi bi-eye me-2"></i> Visualización</a></li>
                     <li><a href="#" class="nav-link text-dark px-3 py-1"><i class="bi bi-bar-chart-line me-2"></i> Actividad</a></li>
                     <li><a href="#" class="nav-link text-dark px-3 py-1"><i class="bi bi-laptop me-2"></i> Sesiones</a></li>
-                    <li><a href="#" class="nav-link text-dark px-3 py-1"><i class="bi bi-check-circle me-2"></i> Disponibilidad</a></li>
+                    <li><a href="<%= request.getContextPath()%>/AsistenciaController" class="nav-link text-dark px-3 py-1"><i class="bi bi-check-circle me-2"></i> Disponibilidad</a></li>
                 </ul>
             </div>
         </li>
@@ -121,12 +126,55 @@
             </div>
         </li>
 
-        <!-- CERRAR SESIÓN -->
+
+        <% } else if ("Soporte tecnico".equals(rol)) { %>
+
+
+        <%-- Solo ver TICKETS para Soporte técnico --%>
+        <li class="nav-item">
+            <a class="nav-link d-flex justify-content-between align-items-center text-dark px-3 py-2"
+               data-bs-toggle="collapse" href="#ticketsMenu" role="button" aria-expanded="false" aria-controls="ticketsMenu">
+                <span><i class="bi bi-ticket-perforated-fill me-2"></i> Tickets</span>
+                <i class="bi bi-chevron-down"></i>
+            </a>
+            <div class="collapse" id="ticketsMenu">
+                <ul class="nav flex-column ms-4">
+                    <li><a href="#" class="nav-link text-dark px-3 py-1"><i class="bi bi-tools me-2"></i> Gestionar</a></li>
+                    <li><a href="#" class="nav-link text-dark px-3 py-1"><i class="bi bi-person-plus me-2"></i> Asignar</a></li>
+                    <li><a href="#" class="nav-link text-dark px-3 py-1"><i class="bi bi-clock-history me-2"></i> Historial</a></li>
+                </ul>
+            </div>
+        </li>
+
+
+
+
+        <% } else if ("Administrativo".equals(rol)) { %>
+
+
+        <%-- Solo ver TICKETS para Soporte técnico --%>
+        <li class="nav-item">
+            <a class="nav-link d-flex justify-content-between align-items-center text-dark px-3 py-2"
+               data-bs-toggle="collapse" href="#ticketsMenu" role="button" aria-expanded="false" aria-controls="ticketsMenu">
+                <span><i class="bi bi-ticket-perforated-fill me-2"></i> Hola</span>
+                <i class="bi bi-chevron-down"></i>
+            </a>
+            <div class="collapse" id="ticketsMenu">
+                <ul class="nav flex-column ms-4">
+                    <li><a href="#" class="nav-link text-dark px-3 py-1"><i class="bi bi-tools me-2"></i> Gestionar</a></li>
+
+                </ul>
+            </div>
+        </li>
+
+        <% }%>
+
+
+        <%-- CERRAR SESIÓN: todos los roles --%>
         <li class="nav-item mt-3">
-            <a href="#" class="nav-link d-flex align-items-center px-3 py-2 text-danger">
+            <a href="<%= request.getContextPath()%>/CerrarSesionController" class="nav-link d-flex align-items-center px-3 py-2 text-danger">
                 <i class="bi bi-box-arrow-right me-2"></i> Cerrar sesión
             </a>
         </li>
-
     </ul>
 </div>

@@ -4,7 +4,7 @@ CREATE TABLE `usuarios` (
   `nombre` varchar(100) DEFAULT NULL,
   `correo` varchar(100) DEFAULT NULL,
   `contrasena` varchar(255) DEFAULT NULL,
-  `rol` enum('admin','tecnico') NOT NULL,
+  `rol` enum('Administrativo','Soporte tecnico','Soporte especializado') NOT NULL,
   `fecha_registro` datetime DEFAULT current_timestamp()
 );
 
@@ -296,4 +296,31 @@ VALUES ('Juan Pérez', 'juan.perez@example.com', '123456', 'admin');
 
 INSERT INTO usuarios (nombre, correo, contrasena, rol)
 VALUES ('Ana López', 'ana.lopez@example.com', 'tecnico123', 'tecnico');
+
+
+INSERT INTO usuarios (nombre, correo, contrasena, rol)
+VALUES ('Joshua', 'joshua@example.com', '123', 'Soporte tecnico');
+
+insert into tecnicos (id_tecnico, id_usuario, especialidad, estado) values (1,2,'Soporte especializado','activo');
+
+INSERT INTO tipo_equipo (id_tipo, nombre_tipo) VALUES (1, 'Anexos');
+INSERT INTO tipo_equipo (id_tipo, nombre_tipo) VALUES (2, 'Biométrico');
+INSERT INTO tipo_equipo (id_tipo, nombre_tipo) VALUES (3, 'Equipos');
+INSERT INTO tipo_equipo (id_tipo, nombre_tipo) VALUES (4, 'Impresoras');
+INSERT INTO tipo_equipo (id_tipo, nombre_tipo) VALUES (5, 'Panacast');
+INSERT INTO tipo_equipo (id_tipo, nombre_tipo) VALUES (6, 'Proyectores');
+INSERT INTO tipo_equipo (id_tipo, nombre_tipo) VALUES (7, 'Robótica');
+INSERT INTO tipo_equipo (id_tipo, nombre_tipo) VALUES (8, 'Televisores');
+INSERT INTO tipo_equipo (id_tipo, nombre_tipo) VALUES (9, 'Videobeam');
+
+
+INSERT INTO tickets (id_ticket, titulo, descripcion, estado, prioridad, id_usuario, id_tecnico, fecha_creacion)
+VALUES (1, 'Problema con impresora', 'La impresora no responde al enviar trabajos desde red.', 'abierto', 'alta', 1, 1, NOW());
+
+INSERT INTO tickets (id_ticket, titulo, descripcion, estado, prioridad, id_usuario, id_tecnico, fecha_creacion, fecha_cierre)
+VALUES (2, 'Actualización de software', 'Se necesita actualizar el software antivirus en todos los equipos del área contable.', 'cerrado', 'media', 1, 1, '2024-07-01 09:30:00', '2024-07-02 11:15:00');
+
+INSERT INTO tickets (id_ticket, titulo, descripcion, estado, prioridad, id_usuario, id_tecnico, fecha_creacion)
+VALUES (3, 'Reemplazo de monitor', 'El monitor del equipo LEN123 presenta fallas de imagen.', 'en_proceso', 'baja', 1, 1, '2024-07-10 14:45:00');
+
 

@@ -4,8 +4,8 @@
  */
 package Controller;
 
-import BusinessEntity.UsuarioBE;
-import BusinessLogic.UsuarioBL;
+import BusinessEntity.TicketsBE;
+import BusinessLogic.TicketsBL;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -17,10 +17,10 @@ import java.util.ArrayList;
 
 /**
  *
- * @author SOPORTE
+ * @author Smile Consulting
  */
-@WebServlet(name = "ListarUsuarioController", urlPatterns = {"/ListarUsuarioController"})
-public class ListarUsuarioController extends HttpServlet {
+@WebServlet(name = "TicketsController", urlPatterns = {"/TicketsController"})
+public class TicketsController extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -39,10 +39,10 @@ public class ListarUsuarioController extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet ListarUsuarioController</title>");
+            out.println("<title>Servlet TicketsController</title>");
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet ListarUsuarioController at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet TicketsController at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -60,27 +60,25 @@ public class ListarUsuarioController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-
+    
+        
         String accion = request.getParameter("accion");
 
-        if (accion == null || accion.equals("administrativo")) {
+        if (accion == null || accion.equals("especializado")) {
 
-            UsuarioBL usuarioBL = new UsuarioBL();
-            ArrayList<UsuarioBE> listaUsuarios = usuarioBL.ReadAll();
-            request.setAttribute("listaUsuarios", listaUsuarios);
-            request.getRequestDispatcher("/usuarios/frmUsuario.jsp").forward(request, response);
+            TicketsBL BL = new TicketsBL();
+            ArrayList<TicketsBE> listaTickets = BL.ReadAll();
+            request.setAttribute("listaTickets", listaTickets);
+            request.getRequestDispatcher("/usuarios/frmTickets.jsp").forward(request, response);
 
         } else if (accion == null || accion.equals("soporte")) {
 
-            UsuarioBL usuarioBL = new UsuarioBL();
-            ArrayList<UsuarioBE> listaUsuarios = usuarioBL.ReadAllSoporte();
-            request.setAttribute("listaUsuarios", listaUsuarios);
-            request.getRequestDispatcher("/usuarios/frmUsuario.jsp").forward(request, response);
-
+           
         } else {
             // Otra acción o acción desconocida
             response.sendError(HttpServletResponse.SC_NOT_FOUND, "Acción no reconocida");
         }
+    
     }
 
     /**
@@ -94,6 +92,7 @@ public class ListarUsuarioController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        processRequest(request, response);
     }
 
     /**
