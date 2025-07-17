@@ -5,6 +5,7 @@
 package Controller;
 
 import BusinessEntity.UsuarioBE;
+import DataAccessObject.TecnicoDAO;
 import DataAccessObject.UsuarioDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -76,60 +77,68 @@ public class LoginUsuarioServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        UsuarioDAO usuarioDAO = new UsuarioDAO();
-
         String username = request.getParameter("username");
-        String password = request.getParameter("password");
-        String role = request.getParameter("role");
-        String recordar = request.getParameter("rememberMe");
+    String password = request.getParameter("password");
+    String role = request.getParameter("role");
+    String recordar = request.getParameter("rememberMe");
 
-        // Validar campos vacíos
-        if (username == null || username.isEmpty()
-                || password == null || password.isEmpty()
-                || role == null || role.isEmpty()) {
-            response.sendRedirect("index.jsp?error=campos");
-            return;
-        }
+    // Validar campos vacíos
+    if (username == null || username.isEmpty()
+            || password == null || password.isEmpty()
+            || role == null || role.isEmpty()) {
+        response.sendRedirect("index.jsp?error=campos");
+        return;
+    }
 
-        try {
-            boolean validado = usuarioDAO.validarUsuario(username, password, role);
+    UsuarioDAO usuarioDAO = new UsuarioDAO();
 
-            if (validado) {
-                HttpSession session = request.getSession();
-                session.setAttribute("usuario", username);
-                session.setAttribute("rol", role);
+    try {
+        // Validar credenciales
+        UsuarioBE usuario = usuarioDAO.obtenerUsuarioPorCredenciales(username, password, role);
 
-                UsuarioBE u = new UsuarioBE();
-                
-                
-                if ("true".equals(recordar)) {
-                    Cookie cookie = new Cookie("usuarioRecordado", u.getCorreo());
-                    cookie.setMaxAge(60 * 60 * 24 * 7); // 7 días
-                    cookie.setPath("/"); // IMPORTANTE: mismo path
-                    response.addCookie(cookie);
-                }
+        if (usuario != null) {
+            HttpSession session = request.getSession();
+            session.setAttribute("usuario", usuario.getNombre());
+            session.setAttribute("rol", usuario.getRol());
+            session.setAttribute("id_usuario", usuario.getIdUsuario());
 
-                // Redirigir según el rol
-                switch (role) {
-                    case "Administrativo":
-                        response.sendRedirect("gui/Principal.jsp");
-                        break;
-                    case "Soporte tecnico":
-                        response.sendRedirect("gui/Principal.jsp");
-                        break;
-                    case "Soporte especializado":
-                        response.sendRedirect("ListarUsuarioController");
-                        break;
-                    default:
-                        response.sendRedirect("index.jsp?error=rol");
-                }
-            } else {
-                response.sendRedirect("index.jsp?error=credenciales");
+            // Si es técnico, obtener su ID técnico
+            if (role.equals("Soporte tecnico") || role.equals("Soporte especializado")) {
+                TecnicoDAO tecnicoDAO = new TecnicoDAO();
+                int idTecnico = tecnicoDAO.obtenerIdTecnicoDesdeUsuario(usuario.getIdUsuario());
+                session.setAttribute("idd", idTecnico);
             }
-        } catch (Exception e) {
-            e.printStackTrace();
-            response.sendRedirect("index.jsp?error=conexion");
+
+            // Recordar usuario (cookie)
+            if ("true".equals(recordar)) {
+                Cookie cookie = new Cookie("usuarioRecordado", usuario.getCorreo());
+                cookie.setMaxAge(60 * 60 * 24 * 7); // 7 días
+                cookie.setPath("/"); 
+                response.addCookie(cookie);
+            }
+
+            // Redirigir según el rol
+            switch (usuario.getRol()) {
+                case "Administrativo":
+                case "Soporte tecnico":
+                    response.sendRedirect("gui/Principal.jsp");
+                    break;
+                case "Soporte especializado":
+                    response.sendRedirect("ListarUsuarioController");
+                    break;
+                default:
+                    response.sendRedirect("index.jsp?error=rol");
+                    break;
+            }
+
+        } else {
+            response.sendRedirect("index.jsp?error=credenciales");
         }
+
+    } catch (Exception e) {
+        e.printStackTrace();
+        response.sendRedirect("index.jsp?error=conexion");
+    }
 
     }
 

@@ -1,6 +1,8 @@
 
 package BusinessEntity;
 
+import java.util.Date;
+
 
 public class UsuarioBE {
     
@@ -9,16 +11,18 @@ public class UsuarioBE {
     private String correo;
     private String contrasena;
     private String rol;
+    private Date fecha;
 
     public UsuarioBE() {
     }
 
-    public UsuarioBE(int idUsuario, String nombre, String correo, String contrasena, String rol) {
+    public UsuarioBE(int idUsuario, String nombre, String correo, String contrasena, String rol, Date fecha) {
         this.idUsuario = idUsuario;
         this.nombre = nombre;
         this.correo = correo;
         this.contrasena = contrasena;
         this.rol = rol;
+        this.fecha = fecha;
     }
 
     public int getIdUsuario() {
@@ -60,6 +64,15 @@ public class UsuarioBE {
     public void setRol(String rol) {
         this.rol = rol;
     }
+
+    public Date getFecha() {
+        return fecha;
+    }
+
+    public void setFecha(Date fecha) {
+        this.fecha = fecha;
+    }
+
     
     
     

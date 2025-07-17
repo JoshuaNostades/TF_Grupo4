@@ -239,5 +239,44 @@ public class UsuarioDAO extends ConexionMySQL implements IBaseDAO<UsuarioBE> {
         }
         return idGenerado;
     }
+    
+    
+    public UsuarioBE obtenerUsuarioPorCredenciales(String correo, String contrasena, String rol) throws Exception {
+    UsuarioBE usuario = null;
+
+    Connection conn = null;
+    PreparedStatement ps = null;
+    ResultSet rs = null;
+
+    try {
+        conn = getConnection(); // O el método que uses para conectarte
+        String sql = "SELECT * FROM usuarios WHERE correo = ? AND contrasena = ? AND rol = ?";
+        ps = conn.prepareStatement(sql);
+        ps.setString(1, correo);
+        ps.setString(2, contrasena);
+        ps.setString(3, rol);
+
+        rs = ps.executeQuery();
+
+        if (rs.next()) {
+            usuario = new UsuarioBE();
+            usuario.setIdUsuario(rs.getInt("id_usuario"));
+            usuario.setNombre(rs.getString("nombre"));
+            usuario.setCorreo(rs.getString("correo"));
+            usuario.setContrasena(rs.getString("contrasena"));
+            usuario.setRol(rs.getString("rol"));
+            usuario.setFecha(rs.getDate("fecha_registro"));
+        }
+
+    } catch (SQLException e) {
+        throw new Exception("Error al obtener usuario: " + e.getMessage(), e);
+    } finally {
+        if (rs != null) rs.close();
+        if (ps != null) ps.close();
+        if (conn != null) conn.close();
+    }
+
+    return usuario;
+}
 
 }

@@ -100,7 +100,7 @@
                     <li><a href="<%= request.getContextPath()%>/ListarUsuarioController?accion=soporte" class="nav-link text-dark px-3 py-1"><i class="bi bi-eye me-2"></i> Visualización</a></li>
                     <li><a href="#" class="nav-link text-dark px-3 py-1"><i class="bi bi-bar-chart-line me-2"></i> Actividad</a></li>
                     <li><a href="#" class="nav-link text-dark px-3 py-1"><i class="bi bi-laptop me-2"></i> Sesiones</a></li>
-                    <li><a href="<%= request.getContextPath()%>/AsistenciaController" class="nav-link text-dark px-3 py-1"><i class="bi bi-check-circle me-2"></i> Disponibilidad</a></li>
+                    <li><a href="<%= request.getContextPath()%>/AsistenciaController?accion=listarAsistencia" class="nav-link text-dark px-3 py-1"><i class="bi bi-check-circle me-2"></i> Asistencia</a></li>
                 </ul>
             </div>
         </li>
@@ -127,7 +127,24 @@
         </li>
 
 
-        <% } else if ("Soporte tecnico".equals(rol)) { %>
+        <% } else if ("Soporte tecnico".equals(rol)) {%>
+
+
+        <!-- INICIO -->
+        <li class="nav-item">
+            <a class="nav-link d-flex justify-content-between align-items-center text-dark px-3 py-2"
+               data-bs-toggle="collapse" href="#inicioMenu" role="button" aria-expanded="false" aria-controls="inicioMenu">
+                <span><i class="bi bi-house-door me-2"></i> Inicio</span>
+                <i class="bi bi-chevron-down"></i>
+            </a>
+            <div class="collapse" id="inicioMenu">
+                <ul class="nav flex-column ms-4">
+                    <li><a href="#" class="nav-link text-dark px-3 py-1"><i class="bi bi-journal-code me-2"></i> Guía</a></li>
+                    <li><a href="#" class="nav-link text-dark px-3 py-1"><i class="bi bi-envelope-at me-2"></i> Correo</a></li>
+                    <li><a href="#" class="nav-link text-dark px-3 py-1"><i class="bi bi-chat-dots me-2"></i> IrentChat</a></li>
+                </ul>
+            </div>
+        </li>
 
 
         <%-- Solo ver TICKETS para Soporte técnico --%>
@@ -139,9 +156,28 @@
             </a>
             <div class="collapse" id="ticketsMenu">
                 <ul class="nav flex-column ms-4">
-                    <li><a href="#" class="nav-link text-dark px-3 py-1"><i class="bi bi-tools me-2"></i> Gestionar</a></li>
-                    <li><a href="#" class="nav-link text-dark px-3 py-1"><i class="bi bi-person-plus me-2"></i> Asignar</a></li>
+                    <li><a href="#" class="nav-link text-dark px-3 py-1"><i class="bi bi-tools me-2"></i> Gestion</a></li>
                     <li><a href="#" class="nav-link text-dark px-3 py-1"><i class="bi bi-clock-history me-2"></i> Historial</a></li>
+                </ul>
+            </div>
+        </li>
+
+
+
+
+        <!-- TÉCNICOS -->
+        <li class="nav-item">
+            <a class="nav-link d-flex justify-content-between align-items-center text-dark px-3 py-2"
+               data-bs-toggle="collapse" href="#tecnicosMenu" role="button" aria-expanded="false" aria-controls="tecnicosMenu">
+                <span><i class="bi bi-person-badge me-2"></i> Perfil</span>
+                <i class="bi bi-chevron-down"></i>
+            </a>
+            <div class="collapse" id="tecnicosMenu">
+                <ul class="nav flex-column ms-4">
+                    <li><a href="#" class="nav-link text-dark px-3 py-1"><i class="bi bi-laptop me-2"></i> Sesiones</a></li>
+                    <li><a href="<%= request.getContextPath()%>/AsistenciaController?accion=registrarAsistencia" class="nav-link text-dark px-3 py-1"><i class="bi bi-check-circle me-2"></i> Asistencia</a></li>
+                    <li><a href="#" class="nav-link text-dark px-3 py-1"><i class="bi bi-bar-chart-line me-2"></i> Configuracion</a></li>
+
                 </ul>
             </div>
         </li>

@@ -292,10 +292,10 @@ ALTER TABLE `sesion`
 
 
 INSERT INTO usuarios (nombre, correo, contrasena, rol)
-VALUES ('Juan Pérez', 'juan.perez@example.com', '123456', 'admin');
+VALUES ('Juan Pérez', 'juan.perez@example.com', '123', 'Administrativo');
 
 INSERT INTO usuarios (nombre, correo, contrasena, rol)
-VALUES ('Ana López', 'ana.lopez@example.com', 'tecnico123', 'tecnico');
+VALUES ('Ana López', 'ana.lopez@example.com', '123', 'Soporte especializado');
 
 
 INSERT INTO usuarios (nombre, correo, contrasena, rol)
@@ -329,5 +329,23 @@ VALUES (4, 'Problema con cpu', 'La cpu no responde al enviar trabajos desde red.
 
 INSERT INTO tickets (id_ticket, titulo, descripcion, estado, prioridad, id_usuario, id_tecnico, fecha_creacion)
 VALUES (5, 'Problema con vpn', 'La vpn no responde al enviar trabajos desde red.', 'abierto', 'alta', 1, 1, NOW());
+
+
+
+INSERT INTO `asistencias` (
+  `id_asistencia`,
+  `id_tecnico`,
+  `fecha`,
+  `hora_entrada`,
+  `hora_salida`,
+  `ubicacion`
+) VALUES (
+  1,                  -- id_asistencia
+  1,                  -- id_tecnico
+  '2025-07-17',       -- fecha (hoy)
+  '08:00:00',         -- hora_entrada
+  '17:00:00',         -- hora_salida
+  'Local 5'   -- ubicacion 
+);
 
 

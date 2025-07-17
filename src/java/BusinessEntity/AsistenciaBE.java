@@ -9,12 +9,12 @@ public class AsistenciaBE {
     
     private int idAsistencia;
     private int idTecnico;
-    private Date fecha;
+    private java.sql.Date fecha;
     private Time horaEntrada;
     private Time horaSalida;
     private String ubicacion;
 
-    public AsistenciaBE(int idAsistencia, int idTecnico, Date fecha, Time horaEntrada, Time horaSalida, String ubicacion) {
+    public AsistenciaBE(int idAsistencia, int idTecnico, java.sql.Date fecha, Time horaEntrada, Time horaSalida, String ubicacion) {
         this.idAsistencia = idAsistencia;
         this.idTecnico = idTecnico;
         this.fecha = fecha;
@@ -22,6 +22,21 @@ public class AsistenciaBE {
         this.horaSalida = horaSalida;
         this.ubicacion = ubicacion;
     }
+
+    public AsistenciaBE(int idTecnico, java.sql.Date fecha, Time horaEntrada, String ubicacion) {
+        this.idTecnico = idTecnico;
+        this.fecha = fecha;
+        this.horaEntrada = horaEntrada;
+        this.ubicacion = ubicacion;
+    }
+
+    public AsistenciaBE(int idTecnico, Time horaSalida, String ubicacion) {
+        this.idTecnico = idTecnico;
+        this.horaSalida = horaSalida;
+        this.ubicacion = ubicacion;
+    }
+    
+    
 
     public AsistenciaBE() {
     }
@@ -42,11 +57,11 @@ public class AsistenciaBE {
         this.idTecnico = idTecnico;
     }
 
-    public Date getFecha() {
+    public java.sql.Date getFecha() {
         return fecha;
     }
 
-    public void setFecha(Date fecha) {
+    public void setFecha(java.sql.Date fecha) {
         this.fecha = fecha;
     }
 
@@ -73,6 +88,8 @@ public class AsistenciaBE {
     public void setUbicacion(String ubicacion) {
         this.ubicacion = ubicacion;
     }
+
+    
     
     
     

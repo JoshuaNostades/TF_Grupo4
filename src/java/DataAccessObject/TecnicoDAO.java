@@ -216,4 +216,20 @@ public class TecnicoDAO extends ConexionMySQL implements IBaseDAO<TecnicoBE> {
             return false;
         }
     }
+    
+    public  int obtenerIdTecnicoDesdeUsuario(int idUsuario) {
+        int idTecnico = -1;
+        try {
+            String sql = "SELECT id_tecnico FROM tecnicos WHERE id_usuario = ?";
+            PreparedStatement stmt = getConnection().prepareStatement(sql);
+            stmt.setInt(1, idUsuario);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                idTecnico = rs.getInt("id_tecnico");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return idTecnico;
+    }
 }
