@@ -232,4 +232,30 @@ public class TecnicoDAO extends ConexionMySQL implements IBaseDAO<TecnicoBE> {
         }
         return idTecnico;
     }
+    
+
+  
+  
+  public ArrayList<UsuarioBE> listarTecnicos() {
+    ArrayList<UsuarioBE> lista = new ArrayList<>();
+    String sql = "SELECT * FROM usuarios WHERE rol = 'Soporte tecnico'";
+
+    try (Connection con = getConnection();
+         PreparedStatement ps = con.prepareStatement(sql);
+         ResultSet rs = ps.executeQuery()) {
+
+        while (rs.next()) {
+            UsuarioBE u = new UsuarioBE();
+            u.setIdUsuario(rs.getInt("id_usuario"));
+            u.setNombre(rs.getString("nombre"));
+            u.setCorreo(rs.getString("correo"));
+            u.setRol(rs.getString("rol"));
+            lista.add(u);
+        }
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+    return lista;
+}
+    
 }

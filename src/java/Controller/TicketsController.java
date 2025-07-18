@@ -4,8 +4,13 @@
  */
 package Controller;
 
+import BusinessEntity.TecnicoBE;
 import BusinessEntity.TicketsBE;
+import BusinessEntity.UsuarioBE;
 import BusinessLogic.TicketsBL;
+import DataAccessObject.TecnicoDAO;
+import DataAccessObject.TicketsDAO;
+import DataAccessObject.UsuarioDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -13,6 +18,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import java.util.ArrayList;
 
 /**
@@ -60,8 +66,7 @@ public class TicketsController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-    
-        
+
         String accion = request.getParameter("accion");
 
         if (accion == null || accion.equals("especializado")) {
@@ -73,15 +78,19 @@ public class TicketsController extends HttpServlet {
 
         } else if (accion == null || accion.equals("asignar")) {
 
-           TicketsBL BL = new TicketsBL();
+            TicketsBL BL = new TicketsBL();
             ArrayList<TicketsBE> listaTickets = BL.ReadAll();
+            TecnicoDAO daos = new TecnicoDAO();
+            ArrayList<UsuarioBE> listaTecnicos = daos.listarTecnicos();
+            request.setAttribute("listaTecnicos", listaTecnicos);
+
             request.setAttribute("listaTicketsAsignar", listaTickets);
             request.getRequestDispatcher("/usuarios/frmAsignar.jsp").forward(request, response);
         } else {
             // Otra acción o acción desconocida
             response.sendError(HttpServletResponse.SC_NOT_FOUND, "Acción no reconocida");
         }
-    
+
     }
 
     /**
@@ -95,7 +104,38 @@ public class TicketsController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+
+        String accion = request.getParameter("accion");
+        if ("registrar".equals(accion)) {
+            try {
+                // Recoge datos del formulario
+                String titulo = request.getParameter("titulo");
+                String descripcion = request.getParameter("descripcion");
+
+                // Obtiene el usuario desde la sesión
+                HttpSession sesion = request.getSession();
+                UsuarioBE usuario = (UsuarioBE) sesion.getAttribute("usuario");
+
+                // Crea el nuevo ticket
+                TicketsBE ticket = new TicketsBE();
+                ticket.setTitulo(titulo);
+                ticket.setDescripcion(descripcion);
+                ticket.setEstado("abierto");
+                ticket.setPrioridad(""); // si quieres dejarlo sin prioridad inicialmente
+                ticket.setIdUsuario(usuario.getIdUsuario());
+                ticket.setIdTecnico(0); // o null si tu BE lo soporta
+
+                // Guardar en la BD
+                TicketsDAO dao = new TicketsDAO();
+                dao.insertarTicket(ticket);
+
+                // Redirigir o mostrar mensaje
+                response.sendRedirect("RequerimientoController?msg=exito");
+            } catch (Exception e) {
+                e.printStackTrace();
+                response.sendRedirect("RequerimientoController?msg=error");
+            }
+        }
     }
 
     /**

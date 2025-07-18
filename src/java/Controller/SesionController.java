@@ -4,24 +4,23 @@
  */
 package Controller;
 
+import BusinessEntity.SesionBE;
 import DataAccessObject.SesionDAO;
-import DataAccessObject.UsuarioDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
+import java.util.List;
 
 /**
  *
  * @author Smile Consulting
  */
-@WebServlet(name = "CerrarSesionController", urlPatterns = {"/CerrarSesionController"})
-public class CerrarSesionController extends HttpServlet {
+@WebServlet(name = "SesionController", urlPatterns = {"/SesionController"})
+public class SesionController extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -40,10 +39,10 @@ public class CerrarSesionController extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet CerrarSesionController</title>");
+            out.println("<title>Servlet SesionController</title>");
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet CerrarSesionController at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet SesionController at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -61,33 +60,15 @@ public class CerrarSesionController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+    
+        
+        SesionDAO sesionDAO = new SesionDAO();
+        List<SesionBE> listaSesiones = sesionDAO.listarSesiones(); // método que leerá de la BD
 
-        // 1. Invalidar la sesión actual
-        HttpSession session = request.getSession(false);
-
-        if (session != null) {
-            Integer idSesion = (Integer) session.getAttribute("idSesion");
-            System.out.println("idddddddd sesión al cerrar: " + idSesion);
-            if (idSesion != null) {
-                UsuarioDAO dao = new UsuarioDAO();
-                String token = (String) session.getAttribute("tokenSesion");
-                        System.out.println("tokenn sesión al cerrar: " + token);
-                SesionDAO sesionDAO = new SesionDAO();
-                sesionDAO.cerrarSesion(token); // actualiza la fecha_fin
-                dao.registrarCierreSesion(idSesion);
-            }
-            session.invalidate();
-        }
-
-        // 2. Eliminar cookie de sesión persistente
-        Cookie c = new Cookie("usuarioRecordado", "");
-        c.setMaxAge(0); // Eliminar cookie
-        c.setPath("/"); // Mismo path que al crearla
-        response.addCookie(c);
-
-        // 3. Redirigir a la página de inicio
-        response.sendRedirect("index.jsp");
-
+        request.setAttribute("listaSesiones", listaSesiones);
+        request.getRequestDispatcher("/gui/frmSesion.jsp").forward(request, response);
+    
+    
     }
 
     /**
@@ -101,9 +82,7 @@ public class CerrarSesionController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-
-        doGet(request, response);
-
+        processRequest(request, response);
     }
 
     /**
@@ -113,7 +92,7 @@ public class CerrarSesionController extends HttpServlet {
      */
     @Override
     public String getServletInfo() {
-        return "Controlador para cerrar sesión y limpiar cookies";
+        return "Short description";
     }// </editor-fold>
 
 }

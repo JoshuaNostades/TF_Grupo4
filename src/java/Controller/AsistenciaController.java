@@ -14,6 +14,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.*;
 
@@ -22,9 +23,6 @@ import java.sql.Date;
 import java.sql.Time;
 import java.time.LocalDate;
 import java.time.LocalTime;
-
-
-
 
 /**
  *
@@ -83,7 +81,30 @@ public class AsistenciaController extends HttpServlet {
 
         } else if (accion == null || accion.equals("registrarAsistencia")) {
 
-            request.getRequestDispatcher("/usuarios/frmRegistrarAsistencia.jsp").forward(request, response);
+            HttpSession session = request.getSession();
+            Integer idTecnico = (Integer) session.getAttribute("idd");
+
+            if (idTecnico != null) {
+                AsistenciaDAO asistenciaDAO = new AsistenciaDAO();
+                AsistenciaBE asistencia = asistenciaDAO.obtenerAsistenciaDelDia(idTecnico);
+
+                // Verificar si ya marcó entrada y salida
+                boolean tieneEntrada = asistencia != null && asistencia.getHoraEntrada() != null;
+                boolean tieneSalida = asistencia != null && asistencia.getHoraSalida() != null;
+
+                // Enviar al JSP
+                request.setAttribute("asistencia", asistencia);
+                request.setAttribute("tieneEntrada", tieneEntrada);
+                request.setAttribute("tieneSalida", tieneSalida);
+
+                // Fecha de hoy en formato bonito
+                LocalDate hoy = LocalDate.now();
+                request.setAttribute("fechaHoy", hoy.toString());
+
+                request.getRequestDispatcher("usuarios/frmRegistrarAsistencia.jsp").forward(request, response);
+            } else {
+                response.sendRedirect("/login.jsp?msg=sin_sesion");
+            }
 
         } else {
             // Otra acción o acción desconocida
@@ -107,18 +128,17 @@ public class AsistenciaController extends HttpServlet {
 
         try {
             AsistenciaDAO asistenciaBL = new AsistenciaDAO();
-            int idTecnico = Integer.parseInt(request.getParameter("id_tecnico"));
-
+            HttpSession session = request.getSession(false);
+            int idTecnico = (int) session.getAttribute("idd");
             // Convertir la fecha en formato seguro
-            String fechaStr = request.getParameter("fecha"); // ej. "2025-07-17"
-            LocalDate localFecha = LocalDate.parse(fechaStr);
+
+            LocalDate localFecha = LocalDate.now();
             Date fecha = Date.valueOf(localFecha);
 
             if (accion == null || accion.equals("registrarEntrada")) {
 
                 // Manejo seguro de la hora de entrada
-                String horaEntradaStr = request.getParameter("hora_entrada"); // ej. "15:00"
-                LocalTime localHoraEntrada = LocalTime.parse(horaEntradaStr);
+                LocalTime localHoraEntrada = LocalTime.now(); // hora actual
                 Time horaEntrada = Time.valueOf(localHoraEntrada);
 
                 String ubicacion = request.getParameter("ubicacion");
@@ -133,30 +153,28 @@ public class AsistenciaController extends HttpServlet {
                 boolean registrado = asistenciaBL.registrarAsistencia(asistencia);
 
                 if (registrado) {
-                    response.sendRedirect("frmAsistencia.jsp?msg=entrada_ok");
+                    response.sendRedirect("AsistenciaController?accion=registrarAsistencia");
                 } else {
-                    response.sendRedirect("frmAsistencia.jsp?msg=entrada_error");
+                    response.sendRedirect("usuarios/frmRegistrarAsistencia.jsp?msg=entrada_error");
                 }
 
             } else if (accion.equals("registrarSalida")) {
 
-                // Manejo seguro de la hora de salida
-                String horaSalidaStr = request.getParameter("hora_salida"); // ej. "17:30"
-                LocalTime localHoraSalida = LocalTime.parse(horaSalidaStr);
-                Time horaSalida = Time.valueOf(localHoraSalida);
+                LocalTime localHorasalida = LocalTime.now(); // hora actual
+                Time horaSalida = Time.valueOf(localHorasalida);
 
                 boolean actualizado = asistenciaBL.registrarSalida(idTecnico, fecha, horaSalida);
 
                 if (actualizado) {
-                    response.sendRedirect("frmAsistencia.jsp?msg=salida_ok");
+                    response.sendRedirect("AsistenciaController?accion=registrarAsistencia");
                 } else {
-                    response.sendRedirect("frmAsistencia.jsp?msg=salida_error");
+                    response.sendRedirect("usuarios/frmRegistrarAsistencia.jsp?msg=salida_error");
                 }
             }
 
         } catch (Exception e) {
             e.printStackTrace();
-            response.sendRedirect("frmAsistencia.jsp?msg=exception");
+            response.sendRedirect("usuarios/frmRegistrarAsistencia.jsp?msg=exception");
         }
 
     }

@@ -104,8 +104,8 @@ public class UsuarioDAO extends ConexionMySQL implements IBaseDAO<UsuarioBE> {
 
         return lista;
     }
-    
-     public ArrayList<UsuarioBE> ReadAllSoporte() {
+
+    public ArrayList<UsuarioBE> ReadAllSoporte() {
 
         ArrayList<UsuarioBE> lista = new ArrayList<>();
         String sql = "SELECT * FROM usuarios where rol = 'Soporte tecnico'";
@@ -239,44 +239,67 @@ public class UsuarioDAO extends ConexionMySQL implements IBaseDAO<UsuarioBE> {
         }
         return idGenerado;
     }
-    
-    
+
     public UsuarioBE obtenerUsuarioPorCredenciales(String correo, String contrasena, String rol) throws Exception {
-    UsuarioBE usuario = null;
+        UsuarioBE usuario = null;
 
-    Connection conn = null;
-    PreparedStatement ps = null;
-    ResultSet rs = null;
+        Connection conn = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
 
-    try {
-        conn = getConnection(); // O el método que uses para conectarte
-        String sql = "SELECT * FROM usuarios WHERE correo = ? AND contrasena = ? AND rol = ?";
-        ps = conn.prepareStatement(sql);
-        ps.setString(1, correo);
-        ps.setString(2, contrasena);
-        ps.setString(3, rol);
+        try {
+            conn = getConnection(); // O el método que uses para conectarte
+            String sql = "SELECT * FROM usuarios WHERE correo = ? AND contrasena = ? AND rol = ?";
+            ps = conn.prepareStatement(sql);
+            ps.setString(1, correo);
+            ps.setString(2, contrasena);
+            ps.setString(3, rol);
 
-        rs = ps.executeQuery();
+            rs = ps.executeQuery();
 
-        if (rs.next()) {
-            usuario = new UsuarioBE();
-            usuario.setIdUsuario(rs.getInt("id_usuario"));
-            usuario.setNombre(rs.getString("nombre"));
-            usuario.setCorreo(rs.getString("correo"));
-            usuario.setContrasena(rs.getString("contrasena"));
-            usuario.setRol(rs.getString("rol"));
-            usuario.setFecha(rs.getDate("fecha_registro"));
+            if (rs.next()) {
+                usuario = new UsuarioBE();
+                usuario.setIdUsuario(rs.getInt("id_usuario"));
+                usuario.setNombre(rs.getString("nombre"));
+                usuario.setCorreo(rs.getString("correo"));
+                usuario.setContrasena(rs.getString("contrasena"));
+                usuario.setRol(rs.getString("rol"));
+                usuario.setFecha(rs.getDate("fecha_registro"));
+            }
+
+        } catch (SQLException e) {
+            throw new Exception("Error al obtener usuario: " + e.getMessage(), e);
+        } finally {
+            if (rs != null) {
+                rs.close();
+            }
+            if (ps != null) {
+                ps.close();
+            }
+            if (conn != null) {
+                conn.close();
+            }
         }
 
-    } catch (SQLException e) {
-        throw new Exception("Error al obtener usuario: " + e.getMessage(), e);
-    } finally {
-        if (rs != null) rs.close();
-        if (ps != null) ps.close();
-        if (conn != null) conn.close();
+        return usuario;
     }
+    public List<UsuarioBE> listarTodosMenos(int idActual) {
+        List<UsuarioBE> lista = new ArrayList<>();
+        String sql = "SELECT * FROM usuarios WHERE id_usuario != ?";
+        try (Connection con = getConnection(); PreparedStatement ps = con.prepareStatement(sql)) {
 
-    return usuario;
-}
-
+            ps.setInt(1, idActual);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                UsuarioBE u = new UsuarioBE();
+                u.setIdUsuario(rs.getInt("id_usuario"));
+                u.setNombre(rs.getString("nombre"));
+                u.setRol(rs.getString("rol"));
+                lista.add(u);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return lista;
+    }
 }

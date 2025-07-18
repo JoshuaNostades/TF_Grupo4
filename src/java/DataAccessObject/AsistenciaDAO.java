@@ -147,4 +147,31 @@ public class AsistenciaDAO extends ConexionMySQL implements IBaseDAO<AsistenciaB
             }
         }
     }
+    
+    public AsistenciaBE obtenerAsistenciaDelDia(int idTecnico) {
+    AsistenciaBE asistencia = null;
+    try {
+        String sql = "SELECT * FROM asistencias WHERE id_tecnico = ? AND fecha = CURDATE()";
+        PreparedStatement stmt = getConnection().prepareStatement(sql);
+        stmt.setInt(1, idTecnico);
+        ResultSet rs = stmt.executeQuery();
+
+        if (rs.next()) {
+            asistencia = new AsistenciaBE();
+            asistencia.setIdAsistencia(rs.getInt("id_asistencia"));
+            asistencia.setIdTecnico(rs.getInt("id_tecnico"));
+            asistencia.setFecha(rs.getDate("fecha"));
+            asistencia.setHoraEntrada(rs.getTime("hora_entrada"));
+            asistencia.setHoraSalida(rs.getTime("hora_salida"));
+            asistencia.setUbicacion(rs.getString("ubicacion"));
+        }
+
+        rs.close();
+        stmt.close();
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+    return asistencia;
+}
+    
 }

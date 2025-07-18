@@ -139,7 +139,7 @@ CREATE TABLE `tickets` (
   `id_ticket` int(11) NOT NULL,
   `titulo` varchar(200) DEFAULT NULL,
   `descripcion` text DEFAULT NULL,
-  `estado` enum('abierto','en_proceso','cerrado') DEFAULT 'abierto',
+  `estado` enum('abierto','en_proceso','cerrado','solicitado') DEFAULT 'solicitado',
   `prioridad` enum('baja','media','alta') DEFAULT 'media',
   `id_usuario` int(11) DEFAULT NULL,
   `id_tecnico` int(11) DEFAULT NULL,
@@ -301,8 +301,11 @@ VALUES ('Ana López', 'ana.lopez@example.com', '123', 'Soporte especializado');
 INSERT INTO usuarios (nombre, correo, contrasena, rol)
 VALUES ('Joshua', 'joshua@example.com', '123', 'Soporte tecnico');
 
-insert into tecnicos (id_tecnico, id_usuario, especialidad, estado) values (1,2,'Soporte especializado','activo');
+INSERT INTO usuarios (nombre, correo, contrasena, rol)
+VALUES ('Jose', 'jose@example.com', '123', 'Soporte tecnico');
 
+insert into tecnicos (id_tecnico, id_usuario, especialidad, estado) values (1,2,'Soporte especializado','activo');
+insert into tecnicos (id_tecnico, id_usuario, especialidad, estado) values (2,4,'Soporte tecnico','activo');
 INSERT INTO tipo_equipo (id_tipo, nombre_tipo) VALUES (1, 'Anexos');
 INSERT INTO tipo_equipo (id_tipo, nombre_tipo) VALUES (2, 'Biométrico');
 INSERT INTO tipo_equipo (id_tipo, nombre_tipo) VALUES (3, 'Equipos');
@@ -348,4 +351,15 @@ INSERT INTO `asistencias` (
   'Local 5'   -- ubicacion 
 );
 
+ALTER TABLE sesion MODIFY navegador VARCHAR(1500);
+
+
+ALTER TABLE eventos_calendario DROP FOREIGN KEY eventos_fk;
+ALTER TABLE plantillas DROP FOREIGN KEY plantillas_fk;
+DROP TABLE IF EXISTS eventos_calendario;
+DROP TABLE IF EXISTS plantillas;
+
+
+ALTER TABLE tickets 
+MODIFY COLUMN prioridad VARCHAR(20) DEFAULT 'media';
 

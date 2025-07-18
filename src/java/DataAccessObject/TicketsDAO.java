@@ -10,6 +10,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
+import java.sql.Types;
 
 /**
  *
@@ -120,6 +121,30 @@ public class TicketsDAO extends ConexionMySQL implements IBaseDAO<TicketsBE> {
             return false;
         }
     
+    }public boolean insertarTicket(TicketsBE ticket) {
+    String sql = "INSERT INTO tickets (titulo, descripcion, estado, prioridad, id_usuario, id_tecnico) "
+               + "VALUES (?, ?, ?, ?, ?, ?)";
+
+    try (Connection con = getConnection();
+         PreparedStatement ps = con.prepareStatement(sql)) {
+
+        ps.setString(1, ticket.getTitulo());
+        ps.setString(2, ticket.getDescripcion());
+        ps.setString(3, ticket.getEstado());
+        ps.setString(4, ticket.getPrioridad());
+        ps.setInt(5, ticket.getIdUsuario());
+
+        if (ticket.getIdTecnico() == 0) {
+            ps.setNull(6, Types.INTEGER);
+        } else {
+            ps.setInt(6, ticket.getIdTecnico());
+        }
+
+        return ps.executeUpdate() > 0;
+    } catch (Exception e) {
+        e.printStackTrace();
     }
+    return false;
+}
 
 }

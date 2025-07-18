@@ -17,29 +17,18 @@
 
     <div class="text-muted mb-3 text-center fs-7 fw-semibold">
         <%= session.getAttribute("usuario")%>
+        <%= session.getAttribute("idd")%>
     </div>
     <hr>
     <%
         String rol = (String) session.getAttribute("rol");
+        int id = (Integer) session.getAttribute("idd");
     %>
     <ul class="nav nav-pills flex-column gap-1" >
 
         <% if ("Soporte especializado".equals(rol)) {%>
         <!-- INICIO -->
-        <li class="nav-item">
-            <a class="nav-link d-flex justify-content-between align-items-center text-dark px-3 py-2"
-               data-bs-toggle="collapse" href="#inicioMenu" role="button" aria-expanded="false" aria-controls="inicioMenu">
-                <span><i class="bi bi-house-door me-2"></i> Inicio</span>
-                <i class="bi bi-chevron-down"></i>
-            </a>
-            <div class="collapse" id="inicioMenu">
-                <ul class="nav flex-column ms-4">
-                    <li><a href="#" class="nav-link text-dark px-3 py-1"><i class="bi bi-journal-code me-2"></i> Guía</a></li>
-                    <li><a href="#" class="nav-link text-dark px-3 py-1"><i class="bi bi-envelope-at me-2"></i> Correo</a></li>
-                    <li><a href="#" class="nav-link text-dark px-3 py-1"><i class="bi bi-chat-dots me-2"></i> IrentChat</a></li>
-                </ul>
-            </div>
-        </li>
+
 
         <!-- GESTIÓN -->
         <li class="nav-item">
@@ -51,8 +40,8 @@
             <div class="collapse" id="gestionMenu">
                 <ul class="nav flex-column ms-4">
                     <li><a href="<%= request.getContextPath()%>/InformesController" class="nav-link text-dark px-3 py-1"><i class="bi bi-file-earmark-bar-graph me-2"></i> Informes</a></li>
-                    <li><a href="#" class="nav-link text-dark px-3 py-1"><i class="bi bi-ui-checks-grid me-2"></i> Plantillas</a></li>
-                    <li><a href="#" class="nav-link text-dark px-3 py-1"><i class="bi bi-calendar3 me-2"></i> Eventos</a></li>
+                    <li><a href="<%= request.getContextPath()%>/MensajeController" class="nav-link text-dark px-3 py-1"><i class="bi bi-chat-dots me-2"></i> IrentChat</a></li>
+
                 </ul>
             </div>
         </li>
@@ -83,7 +72,7 @@
             <div class="collapse" id="usuariosMenu">
                 <ul class="nav flex-column ms-4">
                     <li><a href="<%= request.getContextPath()%>/ListarUsuarioController?accion=administrativo" class="nav-link text-dark px-3 py-1"><i class="bi bi-list-ul me-2"></i> Listar</a></li>
-                    <li><a href="#" class="nav-link text-dark px-3 py-1"><i class="bi bi-person-plus-fill me-2"></i> Asignar</a></li>
+                    <li><a href="<%= request.getContextPath()%>/RegistroUsuarioServlet" class="nav-link text-dark px-3 py-1"><i class="bi bi-person-plus-fill me-2"></i> Asignar</a></li>
                 </ul>
             </div>
         </li>
@@ -99,7 +88,7 @@
                 <ul class="nav flex-column ms-4">
                     <li><a href="<%= request.getContextPath()%>/ListarUsuarioController?accion=soporte" class="nav-link text-dark px-3 py-1"><i class="bi bi-eye me-2"></i> Visualización</a></li>
                     <li><a href="#" class="nav-link text-dark px-3 py-1"><i class="bi bi-bar-chart-line me-2"></i> Actividad</a></li>
-                    <li><a href="#" class="nav-link text-dark px-3 py-1"><i class="bi bi-laptop me-2"></i> Sesiones</a></li>
+
                     <li><a href="<%= request.getContextPath()%>/AsistenciaController?accion=listarAsistencia" class="nav-link text-dark px-3 py-1"><i class="bi bi-check-circle me-2"></i> Asistencia</a></li>
                 </ul>
             </div>
@@ -141,7 +130,7 @@
                 <ul class="nav flex-column ms-4">
                     <li><a href="#" class="nav-link text-dark px-3 py-1"><i class="bi bi-journal-code me-2"></i> Guía</a></li>
                     <li><a href="#" class="nav-link text-dark px-3 py-1"><i class="bi bi-envelope-at me-2"></i> Correo</a></li>
-                    <li><a href="#" class="nav-link text-dark px-3 py-1"><i class="bi bi-chat-dots me-2"></i> IrentChat</a></li>
+                    <li><a href="<%= request.getContextPath()%>/MensajeController" class="nav-link text-dark px-3 py-1"><i class="bi bi-chat-dots me-2"></i> IrentChat</a></li>
                 </ul>
             </div>
         </li>
@@ -174,9 +163,8 @@
             </a>
             <div class="collapse" id="tecnicosMenu">
                 <ul class="nav flex-column ms-4">
-                    <li><a href="#" class="nav-link text-dark px-3 py-1"><i class="bi bi-laptop me-2"></i> Sesiones</a></li>
+                    <li><a href="<%= request.getContextPath()%>/SesionController" class="nav-link text-dark px-3 py-1"><i class="bi bi-laptop me-2"></i> Sesiones</a></li>
                     <li><a href="<%= request.getContextPath()%>/AsistenciaController?accion=registrarAsistencia" class="nav-link text-dark px-3 py-1"><i class="bi bi-check-circle me-2"></i> Asistencia</a></li>
-                    <li><a href="#" class="nav-link text-dark px-3 py-1"><i class="bi bi-bar-chart-line me-2"></i> Configuracion</a></li>
 
                 </ul>
             </div>
@@ -185,7 +173,7 @@
 
 
 
-        <% } else if ("Administrativo".equals(rol)) { %>
+        <% } else if ("Administrativo".equals(rol)) {%>
 
 
         <%-- Solo ver TICKETS para Soporte técnico --%>
@@ -197,7 +185,7 @@
             </a>
             <div class="collapse" id="ticketsMenu">
                 <ul class="nav flex-column ms-4">
-                    <li><a href="#" class="nav-link text-dark px-3 py-1"><i class="bi bi-tools me-2"></i> Gestionar</a></li>
+                    <li><a href="<%= request.getContextPath()%>/RequerimientoController" class="nav-link text-dark px-3 py-1"><i class="bi bi-tools me-2"></i> Requerimiento</a></li>
 
                 </ul>
             </div>

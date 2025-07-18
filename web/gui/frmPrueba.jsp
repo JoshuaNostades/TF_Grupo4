@@ -54,8 +54,25 @@
     </style>
 </head>
 <body>
-    <div class="fondo-pastel-animado caja-central">
+    <div class="clase 1">
         <h1>Hello World!</h1>
+        <h1>Hello World!</h1>
+        <h1>Hello World!</h1>
+        
+    </div>
+    
+    <form method="post" action="LoginServlet">
+        
+        <input type="submit">
+       
+        
+    </form>
+    
+    <div class="clase 2">
+        <h1>Hello World!</h1>
+        <h1>Hello World!</h1>
+        <h1>Hello World!</h1>
+        
     </div>
 </body>
 </html>
