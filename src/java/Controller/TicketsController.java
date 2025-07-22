@@ -19,7 +19,9 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 /**
  *
@@ -106,6 +108,9 @@ public class TicketsController extends HttpServlet {
             throws ServletException, IOException {
 
         String accion = request.getParameter("accion");
+
+        int idUsuario = Integer.parseInt(request.getParameter("idUsuario"));
+
         if ("registrar".equals(accion)) {
             try {
                 // Recoge datos del formulario
@@ -120,10 +125,13 @@ public class TicketsController extends HttpServlet {
                 TicketsBE ticket = new TicketsBE();
                 ticket.setTitulo(titulo);
                 ticket.setDescripcion(descripcion);
-                ticket.setEstado("abierto");
-                ticket.setPrioridad(""); // si quieres dejarlo sin prioridad inicialmente
-                ticket.setIdUsuario(usuario.getIdUsuario());
-                ticket.setIdTecnico(0); // o null si tu BE lo soporta
+                ticket.setEstado("Solicitado");
+                ticket.setPrioridad("sin evaluar"); // si quieres dejarlo sin prioridad inicialmente
+                ticket.setIdUsuario(idUsuario);
+                ticket.setIdTecnico(1); // o null si tu BE lo soporta
+                SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+                Date soloFecha = sdf.parse(sdf.format(new Date()));
+                ticket.setFechaCreacion(soloFecha);
 
                 // Guardar en la BD
                 TicketsDAO dao = new TicketsDAO();

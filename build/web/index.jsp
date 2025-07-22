@@ -205,52 +205,53 @@
 
     <body class="full-screen-bg">
 
-        <%
 
-            String usuario = null;
+        <%
+            UsuarioBE usuarioBE = null;
 
             if (session != null) {
-                usuario = (String) session.getAttribute("usuario");
+                usuarioBE = (UsuarioBE) session.getAttribute("todoUsuario");
             }
 
-            if (usuario == null) {
+            if (usuarioBE == null) {
                 // Buscar cookie
                 Cookie[] cookies = request.getCookies();
                 if (cookies != null) {
                     for (Cookie c : cookies) {
                         if ("usuarioRecordado".equals(c.getName())) {
-                            String usuarioRecordado = c.getValue();
+                            String correo = c.getValue();
 
                             UsuarioDAO dao = new UsuarioDAO();
-                            UsuarioBE usuarioBE = dao.buscarPorCorreo(c.getValue());
+                            usuarioBE = dao.buscarPorCorreo(correo);
+
                             if (usuarioBE != null) {
-                                session.setAttribute("rol", usuarioBE.getRol());
+                                session.setAttribute("rolUsuario", usuarioBE.getRol());
+                                session.setAttribute("todoUsuario", usuarioBE); // ← IMPORTANTE volver a setear
 
                                 switch (usuarioBE.getRol()) {
                                     case "Administrativo":
-                                        response.sendRedirect("/gui/Principal.jsp");
-                                        break;
+                                        response.sendRedirect("RequerimientoController");
+                                        return;
                                     case "Soporte tecnico":
-                                        response.sendRedirect("/gui/Principal.jsp");
-                                        break;
+                                        response.sendRedirect("gui/Principal.jsp");
+                                        return;
                                     case "Soporte especializado":
                                         response.sendRedirect("ListarUsuarioController");
-                                        break;
+                                        return;
                                 }
-                                return;
                             }
                         }
                     }
                 }
             } else {
                 // Si ya hay sesión activa
-                String rol = (String) session.getAttribute("rol");
+                String rol = usuarioBE.getRol();
                 switch (rol) {
                     case "Administrativo":
-                        response.sendRedirect("/gui/Principal.jsp");
+                        response.sendRedirect("RequerimientoController");
                         return;
                     case "Soporte tecnico":
-                        response.sendRedirect("/gui/Principal.jsp");
+                        response.sendRedirect("gui/Principal.jsp");
                         return;
                     case "Soporte especializado":
                         response.sendRedirect("ListarUsuarioController");
@@ -258,14 +259,15 @@
                 }
             }
 
-            // Si llegas aquí, no redirigiste y solo estás mostrando el login
+            // Si llegas aquí, no redirigiste, se mostrará el login
         %>
+
 
         <div class="logo-top-left d-flex align-items-center">
             <img src="irent.png" alt="Logo" class="me-2" style="width: 40px;">
             <span class="logo-text">Irent Perú</span>
         </div>
-        
+
         <!-- Top banner with links -->
         <div class="top-banner"></div>
         <div class="top-right-links">

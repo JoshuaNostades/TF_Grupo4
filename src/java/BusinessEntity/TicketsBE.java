@@ -14,33 +14,20 @@ public class TicketsBE {
     private String prioridad;
     private int idUsuario;
     private int idTecnico;
-    private java.sql.Date fechaCreacion;
-    private java.sql.Date fechaCierre;
-
-    public TicketsBE(int idTicket, String titulo, String descripcion, String estado, String prioridad, int idUsuario, int idTecnico, Date fechaCreacion, Date fechaCierre) {
-        this.idTicket = idTicket;
-        this.titulo = titulo;
-        this.descripcion = descripcion;
-        this.estado = estado;
-        this.prioridad = prioridad;
-        this.idUsuario = idUsuario;
-        this.idTecnico = idTecnico;
-        this.fechaCreacion = fechaCreacion;
-        this.fechaCierre = fechaCierre;
-    }
-
-    public TicketsBE(String titulo, String descripcion, String estado, String prioridad, int idUsuario, int idTecnico, Date fechaCreacion, Date fechaCierre) {
-        this.titulo = titulo;
-        this.descripcion = descripcion;
-        this.estado = estado;
-        this.prioridad = prioridad;
-        this.idUsuario = idUsuario;
-        this.idTecnico = idTecnico;
-        this.fechaCreacion = fechaCreacion;
-        this.fechaCierre = fechaCierre;
-    }
+    private java.util.Date fechaCreacion;
+    private java.util.Date fechaCierre;
 
     public TicketsBE() {
+    }
+
+    public TicketsBE(String titulo, String descripcion, String estado, String prioridad, int idUsuario, int idTecnico, java.util.Date fechaCreacion) {
+        this.titulo = titulo;
+        this.descripcion = descripcion;
+        this.estado = estado;
+        this.prioridad = prioridad;
+        this.idUsuario = idUsuario;
+        this.idTecnico = idTecnico;
+        this.fechaCreacion = fechaCreacion;
     }
 
     public int getIdTicket() {
@@ -99,22 +86,22 @@ public class TicketsBE {
         this.idTecnico = idTecnico;
     }
 
-    public Date getFechaCreacion() {
+    public java.util.Date getFechaCreacion() {
         return fechaCreacion;
     }
 
-    public void setFechaCreacion(Date fechaCreacion) {
+    public void setFechaCreacion(java.util.Date fechaCreacion) {
         this.fechaCreacion = fechaCreacion;
     }
 
-    public Date getFechaCierre() {
+    public java.util.Date getFechaCierre() {
         return fechaCierre;
     }
 
-    public void setFechaCierre(Date fechaCierre) {
+    public void setFechaCierre(java.util.Date fechaCierre) {
         this.fechaCierre = fechaCierre;
     }
-    
+
     
     
     

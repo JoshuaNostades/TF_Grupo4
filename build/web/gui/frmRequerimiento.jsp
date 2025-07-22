@@ -18,14 +18,14 @@
         <div class="container-fluid">
             <div class="row h-100">
                 <!-- Menú lateral -->
-                <div class="col-md-2 bg-light p-3 border-end">
+                <div class="col-md-2 bg-dark p-4 border-end">
                     <%@ include file="/gui/Principal.jsp" %>
                 </div>
 
 
                 <div class="col-md-10 p-4 main-content">
                     <div class="card shadow-sm">
-                        <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+                        <div class="card-header bg-danger text-white d-flex justify-content-between align-items-center">
                             <h4 class="mb-0">Registro de requerimiento</h4>
                             <i class="bi bi-person-plus fs-4"></i>
                         </div>
@@ -34,21 +34,25 @@
 
                             <h2 class="mb-4"></h2>
 
-                            <%
-                                UsuarioBE usuario = (UsuarioBE) session.getAttribute("usuario");
-                                if (usuario == null || !"Administrativo".equals(usuario.getRol())) {
-                                    response.sendRedirect("../index.jsp");
-                                    return;
+                            
+                            <%  
+                                int idUsuario = 0;
+                                Integer idUsuarioObj = (Integer) session.getAttribute("idUsuario");
+                                if (idUsuarioObj != null) {
+                                     idUsuario = idUsuarioObj.intValue();
+                                    // Aquí ya puedes usar idUsuario con seguridad
+                                } else {
+                                    // Redirigir al login si no hay sesión activa
+                                    response.sendRedirect("../index.jsp?error=sinSesion");
                                 }
                             %>
-
-                            <div class="card-header bg-dark text-white">
+                            <div class="card-header bg-secondary text-white">
                                 <h4 class="mb-0">Registrar nuevo Ticket</h4>
                             </div>
                             <form action="<%= request.getContextPath()%>/TicketsController?accion=registrar" method="post">
                                 <div class="card-body">
                                     <input type="hidden" name="accion" value="registrar">
-                                    <input type="hidden" name="idUsuario" value="<%= usuario.getIdUsuario()%>">
+                                    <input type="hidden" name="idUsuario" value="<%= idUsuario%>">
 
                                     <div class="mb-3">
                                         <label for="titulo" class="form-label">Título del ticket</label>

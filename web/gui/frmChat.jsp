@@ -22,15 +22,15 @@
         <div class="container-fluid">
             <div class="row h-100">
                 <!-- Menú lateral -->
-                <div class="col-md-2 bg-light p-3 border-end">
+                <div class="col-md-2 bg-dark p-4 border-end">
                     <%@ include file="/gui/Principal.jsp" %>
                 </div>
 
                 <%
                     // Obtener IDs del emisor y receptor desde la sesión y parámetros
-                    Integer idEmisor = (Integer) session.getAttribute("id_usuario");
-                    String nombreUsuario = (String) session.getAttribute("usuario");
-                    String rolUsuario = (String) session.getAttribute("rol");
+                    Integer idEmisor = (Integer) session.getAttribute("idUsuario");
+                    String nombreUsuario = (String) session.getAttribute("nombreUsuario");
+                    String rolUsuario = (String) session.getAttribute("rolUsuario");
 
                     int idReceptor = request.getParameter("receptor") != null
                             ? Integer.parseInt(request.getParameter("receptor"))
@@ -50,7 +50,7 @@
                 <div class="col-md-10 p-4 main-content">
                     <div class="card shadow-sm">
                         <div class="card-header bg-danger text-white d-flex justify-content-between align-items-center">
-                            <h4 class="mb-0">Lista de Usuarios administrativos</h4>
+                            <h4 class="mb-0">Chat</h4>
                             <i class="bi bi-person-plus fs-4"></i>
                         </div>
                         <div class="card-body">

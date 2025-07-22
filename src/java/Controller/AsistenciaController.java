@@ -82,7 +82,7 @@ public class AsistenciaController extends HttpServlet {
         } else if (accion == null || accion.equals("registrarAsistencia")) {
 
             HttpSession session = request.getSession();
-            Integer idTecnico = (Integer) session.getAttribute("idd");
+            Integer idTecnico = (Integer) session.getAttribute("idTecnico");
 
             if (idTecnico != null) {
                 AsistenciaDAO asistenciaDAO = new AsistenciaDAO();
@@ -129,7 +129,7 @@ public class AsistenciaController extends HttpServlet {
         try {
             AsistenciaDAO asistenciaBL = new AsistenciaDAO();
             HttpSession session = request.getSession(false);
-            int idTecnico = (int) session.getAttribute("idd");
+            int idTecnico = (int) session.getAttribute("idTecnico");
             // Convertir la fecha en formato seguro
 
             LocalDate localFecha = LocalDate.now();

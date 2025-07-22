@@ -18,14 +18,14 @@
         <div class="container-fluid">
             <div class="row h-100">
                 <!-- Menú lateral -->
-                <div class="col-md-2 bg-light p-3 border-end">
+                <div class="col-md-2 bg-dark p-4 border-end">
                     <%@ include file="/gui/Principal.jsp" %>
                 </div>
 
 
                 <div class="col-md-10 p-4 main-content">
                     <div class="card shadow-sm">
-                        <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+                        <div class="card-header bg-secondary text-white d-flex justify-content-between align-items-center">
                             <h4 class="mb-0">Lista de Usuarios administrativos</h4>
                             <i class="bi bi-person-plus fs-4"></i>
                         </div>

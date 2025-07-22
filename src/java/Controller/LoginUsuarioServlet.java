@@ -84,7 +84,6 @@ public class LoginUsuarioServlet extends HttpServlet {
         String role = request.getParameter("role");
         String recordar = request.getParameter("rememberMe");
 
-        // Validar campos vacíos
         if (username == null || username.isEmpty()
                 || password == null || password.isEmpty()
                 || role == null || role.isEmpty()) {
@@ -95,35 +94,63 @@ public class LoginUsuarioServlet extends HttpServlet {
         UsuarioDAO usuarioDAO = new UsuarioDAO();
 
         try {
-            // Validar credenciales
-            UsuarioBE usuario = usuarioDAO.obtenerUsuarioPorCredenciales(username, password, role);
+            UsuarioBE usuario = new UsuarioBE();
+
+            usuario = usuarioDAO.obtenerUsuarioPorCredenciales(username, password, role);
 
             if (usuario != null) {
                 HttpSession session = request.getSession();
-                session.setAttribute("usuario", usuario.getNombre());
-                session.setAttribute("rol", usuario.getRol());
-                session.setAttribute("id_usuario", usuario.getIdUsuario());
-                session.setAttribute("usuario", usuario);
 
-                // Guardar datos de sesión en BD
                 String ip = request.getRemoteAddr();
-                String navegador = request.getHeader("User-Agent");
+                String userAgent = request.getHeader("User-Agent");
+                String navegador = "Desconocido";
+
+                if (userAgent.contains("Edg")) {
+                    navegador = "Microsoft Edge";
+                } else if (userAgent.contains("OPR") || userAgent.contains("Opera")) {
+                    navegador = "Opera";
+                } else if (userAgent.contains("Chrome")) {
+                    navegador = "Google Chrome";
+                } else if (userAgent.contains("Firefox")) {
+                    navegador = "Mozilla Firefox";
+                } else if (userAgent.contains("Safari")) {
+                    navegador = "Safari";
+                }
+
                 String token = UUID.randomUUID().toString(); // o el ID de la sesión
 
                 SesionDAO sesionDAO = new SesionDAO();
                 int idSesion = sesionDAO.registrarSesion(usuario.getIdUsuario(), ip, navegador, token);
 
-// También puedes guardar el token si lo usas para validaciones
-                session.setAttribute("tokenSesion", token);
-                session.setAttribute("idSesion", idSesion);
-                // Si es técnico, obtener su ID técnico
                 if (role.equals("Soporte tecnico") || role.equals("Soporte especializado")) {
                     TecnicoDAO tecnicoDAO = new TecnicoDAO();
-                    int idTecnico = tecnicoDAO.obtenerIdTecnicoDesdeUsuario(usuario.getIdUsuario());
-                    session.setAttribute("idd", idTecnico);
-                }
 
-                // Recordar usuario (cookie)
+                    int idTecnico = tecnicoDAO.obtenerIdTecnicoDesdeUsuario(usuario.getIdUsuario());
+
+                    session.setAttribute("tokenSesion", token);
+                    session.setAttribute("idSesion", idSesion);
+
+                    session.setAttribute("nombreUsuario", usuario.getNombre());
+                    session.setAttribute("correoUsuario", usuario.getCorreo());
+                    session.setAttribute("rolUsuario", usuario.getRol());
+                    session.setAttribute("idUsuario", usuario.getIdUsuario());
+
+                    session.setAttribute("idTecnico", idTecnico);
+
+                } else if (role.equals("Administrativo")) {
+                    int idSesion2 = sesionDAO.registrarSesion(usuario.getIdUsuario(), ip, navegador, token);
+
+                    session.setAttribute("tokenSesion", token);
+                    session.setAttribute("idSesion", idSesion2);
+
+                    session.setAttribute("nombreUsuario", usuario.getNombre());
+                    session.setAttribute("correoUsuario", usuario.getCorreo());
+                    session.setAttribute("rolUsuario", usuario.getRol());
+                    session.setAttribute("idUsuario", usuario.getIdUsuario());
+                    session.setAttribute("todoUsuario", usuario);
+
+                                    }
+
                 if ("true".equals(recordar)) {
                     Cookie cookie = new Cookie("usuarioRecordado", usuario.getCorreo());
                     cookie.setMaxAge(60 * 60 * 24 * 7); // 7 días
@@ -131,9 +158,10 @@ public class LoginUsuarioServlet extends HttpServlet {
                     response.addCookie(cookie);
                 }
 
-                // Redirigir según el rol
                 switch (usuario.getRol()) {
                     case "Administrativo":
+                        response.sendRedirect("RequerimientoController");
+                        break;
                     case "Soporte tecnico":
                         response.sendRedirect("gui/Principal.jsp");
                         break;

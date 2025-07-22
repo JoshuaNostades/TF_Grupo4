@@ -1,0 +1,211 @@
+
+CREATE TABLE `usuarios` (
+  `id_usuario` int(11) NOT NULL,
+  `nombre` varchar(100) DEFAULT NULL,
+  `correo` varchar(100) DEFAULT NULL,
+  `contrasena` varchar(255) DEFAULT NULL,
+  `rol` enum('Administrativo','Soporte tecnico','Soporte especializado') NOT NULL,
+  `fecha_registro` datetime DEFAULT current_timestamp()
+);
+
+CREATE TABLE `tecnicos` (
+  `id_tecnico` int(11) NOT NULL,
+  `id_usuario` int(11) DEFAULT NULL,
+  `especialidad` varchar(100) DEFAULT NULL,
+  `estado` enum('activo','inactivo') DEFAULT 'activo'
+);
+
+CREATE TABLE `asistencias` (
+  `id_asistencia` int(11) NOT NULL,
+  `id_tecnico` int(11) DEFAULT NULL,
+  `fecha` date DEFAULT NULL,
+  `hora_entrada` time DEFAULT NULL,
+  `hora_salida` time DEFAULT NULL,
+  `ubicacion` varchar(200) DEFAULT NULL
+);
+
+CREATE TABLE `tickets` (
+  `id_ticket` int(11) NOT NULL,
+  `titulo` varchar(200) DEFAULT NULL,
+  `descripcion` text DEFAULT NULL,
+  `estado` enum('abierto','en_proceso','cerrado','solicitado') DEFAULT 'solicitado',
+  `prioridad` enum('baja','media','alta','sin evaluar') DEFAULT 'sin evaluar',
+  `id_usuario` int(11) DEFAULT NULL,
+  `id_tecnico` int(11) DEFAULT NULL,
+  `fecha_creacion` datetime DEFAULT current_timestamp(),
+  `fecha_cierre` datetime DEFAULT NULL
+);
+
+CREATE TABLE `informes` (
+  `id_informe` int(11) NOT NULL,
+  `id_ticket` int(11) DEFAULT NULL,
+  `id_tecnico` int(11) DEFAULT NULL,
+  `contenido` text DEFAULT NULL,
+  `fecha` datetime DEFAULT current_timestamp()
+);
+
+CREATE TABLE `mensajes_chat` (
+  `id_mensaje` int(11) NOT NULL,
+  `emisor` int(11) DEFAULT NULL,
+  `receptor` int(11) DEFAULT NULL,
+  `mensaje` text DEFAULT NULL,
+  `fecha_envio` datetime DEFAULT current_timestamp()
+);
+
+CREATE TABLE `sesion` (
+  `id_sesion` int(11) NOT NULL,
+  `id_usuario` int(11) NOT NULL,
+  `fecha_inicio` datetime DEFAULT current_timestamp(),
+  `fecha_fin` datetime DEFAULT NULL,
+  `ip_usuario` varchar(50) DEFAULT NULL,
+  `navegador` varchar(100) DEFAULT NULL,
+  `token_sesion` varchar(255) DEFAULT NULL
+);
+
+ALTER TABLE `usuarios`
+  ADD PRIMARY KEY (`id_usuario`),
+  ADD UNIQUE KEY `correo` (`correo`);
+
+ALTER TABLE `tecnicos`
+  ADD PRIMARY KEY (`id_tecnico`),
+  ADD KEY `id_usuario` (`id_usuario`);
+
+ALTER TABLE `asistencias`
+  ADD PRIMARY KEY (`id_asistencia`),
+  ADD KEY `id_tecnico` (`id_tecnico`);
+
+ALTER TABLE `tickets`
+  ADD PRIMARY KEY (`id_ticket`),
+  ADD KEY `id_usuario` (`id_usuario`),
+  ADD KEY `id_tecnico` (`id_tecnico`);
+
+ALTER TABLE `informes`
+  ADD PRIMARY KEY (`id_informe`),
+  ADD KEY `id_ticket` (`id_ticket`),
+  ADD KEY `id_tecnico` (`id_tecnico`);
+
+ALTER TABLE `mensajes_chat`
+  ADD PRIMARY KEY (`id_mensaje`),
+  ADD KEY `emisor` (`emisor`),
+  ADD KEY `receptor` (`receptor`);
+
+-- AUTO_INCREMENT
+ALTER TABLE `usuarios` MODIFY `id_usuario` int(11) NOT NULL AUTO_INCREMENT;
+ALTER TABLE `tecnicos` MODIFY `id_tecnico` int(11) NOT NULL AUTO_INCREMENT;
+ALTER TABLE `asistencias` MODIFY `id_asistencia` int(11) NOT NULL AUTO_INCREMENT;
+ALTER TABLE `tickets` MODIFY `id_ticket` int(11) NOT NULL AUTO_INCREMENT;
+ALTER TABLE `informes` MODIFY `id_informe` int(11) NOT NULL AUTO_INCREMENT;
+ALTER TABLE `mensajes_chat` MODIFY `id_mensaje` int(11) NOT NULL AUTO_INCREMENT;
+
+-- CLAVES FORÁNEAS
+ALTER TABLE `tecnicos` ADD CONSTRAINT `tecnicos_ibfk_1` FOREIGN KEY (`id_usuario`) REFERENCES `usuarios` (`id_usuario`);
+ALTER TABLE `asistencias` ADD CONSTRAINT `asistencias_fk` FOREIGN KEY (`id_tecnico`) REFERENCES `tecnicos` (`id_tecnico`);
+ALTER TABLE `tickets` ADD CONSTRAINT `tickets_fk1` FOREIGN KEY (`id_usuario`) REFERENCES `usuarios` (`id_usuario`);
+ALTER TABLE `tickets` ADD CONSTRAINT `tickets_fk2` FOREIGN KEY (`id_tecnico`) REFERENCES `tecnicos` (`id_tecnico`);
+ALTER TABLE `informes` ADD CONSTRAINT `informes_fk1` FOREIGN KEY (`id_ticket`) REFERENCES `tickets` (`id_ticket`);
+ALTER TABLE `informes` ADD CONSTRAINT `informes_fk2` FOREIGN KEY (`id_tecnico`) REFERENCES `tecnicos` (`id_tecnico`);
+ALTER TABLE `mensajes_chat` ADD CONSTRAINT `mensajes_fk1` FOREIGN KEY (`emisor`) REFERENCES `usuarios` (`id_usuario`);
+ALTER TABLE `mensajes_chat` ADD CONSTRAINT `mensajes_fk2` FOREIGN KEY (`receptor`) REFERENCES `usuarios` (`id_usuario`);
+-- Índices y PK
+ALTER TABLE `sesion`
+  ADD PRIMARY KEY (`id_sesion`),
+  ADD KEY `id_usuario` (`id_usuario`);
+
+-- AUTO_INCREMENT
+ALTER TABLE `sesion` MODIFY `id_sesion` int(11) NOT NULL AUTO_INCREMENT;
+
+-- Foreign Key
+ALTER TABLE `sesion` 
+  ADD CONSTRAINT `sesion_fk_usuario` FOREIGN KEY (`id_usuario`) REFERENCES `usuarios` (`id_usuario`);
+
+
+INSERT INTO usuarios (nombre, correo, contrasena, rol)
+VALUES ('Juan Pérez', 'juan.perez@example.com', '123', 'Administrativo');
+
+INSERT INTO usuarios (nombre, correo, contrasena, rol)
+VALUES ('Ana López', 'ana.lopez@example.com', '123', 'Soporte especializado');
+
+
+INSERT INTO usuarios (nombre, correo, contrasena, rol)
+VALUES ('Joshua', 'joshua@example.com', '123', 'Soporte tecnico');
+
+INSERT INTO usuarios (nombre, correo, contrasena, rol)
+VALUES ('Jose', 'jose@example.com', '123', 'Soporte tecnico');
+
+insert into tecnicos (id_tecnico, id_usuario, especialidad, estado) values (1,2,'Soporte especializado','activo');
+insert into tecnicos (id_tecnico, id_usuario, especialidad, estado) values (2,4,'Soporte tecnico','activo');
+INSERT INTO tickets (id_ticket, titulo, descripcion, estado, prioridad, id_usuario, id_tecnico, fecha_creacion) VALUES (1, 'Problema con impresora', 'La impresora no responde al enviar trabajos desde red.', 'abierto', 'alta', 1, 1, NOW());
+INSERT INTO tickets (id_ticket, titulo, descripcion, estado, prioridad, id_usuario, id_tecnico, fecha_creacion, fecha_cierre) VALUES (2, 'Actualización de software', 'Se necesita actualizar el software antivirus en todos los equipos del área contable.', 'cerrado', 'media', 1, 1, '2024-07-01 09:30:00', '2024-07-02 11:15:00');
+INSERT INTO tickets (id_ticket, titulo, descripcion, estado, prioridad, id_usuario, id_tecnico, fecha_creacion) VALUES (3, 'Reemplazo de monitor', 'El monitor del equipo LEN123 presenta fallas de imagen.', 'en_proceso', 'baja', 1, 1, '2024-07-10 14:45:00');
+INSERT INTO tickets (id_ticket, titulo, descripcion, estado, prioridad, id_usuario, id_tecnico, fecha_creacion) VALUES (4, 'Problema con cpu', 'La cpu no responde al enviar trabajos desde red.', 'abierto', 'alta', 1, 1, NOW());
+INSERT INTO tickets (id_ticket, titulo, descripcion, estado, prioridad, id_usuario, id_tecnico, fecha_creacion) VALUES (5, 'Problema con vpn', 'La vpn no responde al enviar trabajos desde red.', 'abierto', 'alta', 1, 1, NOW());
+
+
+
+INSERT INTO `asistencias` (
+  `id_asistencia`,
+  `id_tecnico`,
+  `fecha`,
+  `hora_entrada`,
+  `hora_salida`,
+  `ubicacion`
+) VALUES (
+  1,                  -- id_asistencia
+  1,                  -- id_tecnico
+  '2025-07-17',       -- fecha (hoy)
+  '08:00:00',         -- hora_entrada
+  '17:00:00',         -- hora_salida
+  'Local 5'   -- ubicacion 
+);
+
+ALTER TABLE sesion MODIFY navegador VARCHAR(1500);
+
+
+
+
+CREATE TABLE tipo_equipo (
+  id_tipo INT AUTO_INCREMENT PRIMARY KEY,
+  nombre_tipo VARCHAR(100)
+);
+
+
+CREATE TABLE inventario_general (
+  id_inventario INT AUTO_INCREMENT PRIMARY KEY,
+  numero INT,
+  id_tipo INT,
+  contrato VARCHAR(100),
+  anio_fabricacion INT,
+  estado VARCHAR(50),
+  marca VARCHAR(100),
+  modelo VARCHAR(100),
+  serie VARCHAR(100),
+  piso VARCHAR(50),
+  ubicacion_area VARCHAR(100),
+  fecha_inventario DATE,
+  id_tecnico_responsable INT,
+  jefe_sede VARCHAR(100),
+  observaciones TEXT,
+  FOREIGN KEY (id_tipo) REFERENCES tipo_equipo(id_tipo)
+);
+
+
+CREATE TABLE atributo (
+  id_atributo INT AUTO_INCREMENT PRIMARY KEY,
+  nombre_atributo VARCHAR(100),
+  tipo_dato ENUM('texto', 'numero', 'booleano', 'fecha')
+);
+
+
+CREATE TABLE valor_atributo_inventario (
+  id_valor INT AUTO_INCREMENT PRIMARY KEY,
+  id_inventario INT,
+  id_atributo INT,
+  valor_texto TEXT,
+  valor_numero DOUBLE,
+  valor_fecha DATE,
+  valor_booleano BOOLEAN,
+  FOREIGN KEY (id_inventario) REFERENCES inventario_general(id_inventario),
+  FOREIGN KEY (id_atributo) REFERENCES atributo(id_atributo)
+);
+
+

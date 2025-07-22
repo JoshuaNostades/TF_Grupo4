@@ -18,7 +18,7 @@
         <div class="container-fluid">
             <div class="row h-100">
                 <!-- Menú lateral -->
-                <div class="col-md-2 bg-light p-3 border-end">
+                <div class="col-md-2 bg-dark p-4 border-end">
                     <%@ include file="/gui/Principal.jsp" %>
                 </div>
 
