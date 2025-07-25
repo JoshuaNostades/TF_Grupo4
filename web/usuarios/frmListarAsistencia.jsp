@@ -11,7 +11,7 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>JSP Page</title>
+        <title>Asistencia</title>
         <%@ include file="/gui/Encabezado.jsp" %>
     </head>
     <body class="min-vh-100 d-flex">
@@ -25,7 +25,7 @@
 
                 <div class="col-md-10 p-4 main-content">
                     <div class="card shadow-sm">
-                        <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+                        <div class="card-header bg-secondary text-white d-flex justify-content-between align-items-center">
                             <h4 class="mb-0">Lista de Asistencia de tecnicos</h4>
                             <i class="bi bi-person-plus fs-4"></i>
                         </div>

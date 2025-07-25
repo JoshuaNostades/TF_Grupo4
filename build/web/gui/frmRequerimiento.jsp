@@ -11,7 +11,7 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>JSP Page</title>
+        <title>Requerimiento</title>
         <%@ include file="/gui/Encabezado.jsp" %>
     </head>
     <body class="min-vh-100 d-flex">
@@ -25,7 +25,7 @@
 
                 <div class="col-md-10 p-4 main-content">
                     <div class="card shadow-sm">
-                        <div class="card-header bg-danger text-white d-flex justify-content-between align-items-center">
+                        <div class="card-header bg-secondary text-white d-flex justify-content-between align-items-center">
                             <h4 class="mb-0">Registro de requerimiento</h4>
                             <i class="bi bi-person-plus fs-4"></i>
                         </div>
@@ -46,9 +46,7 @@
                                     response.sendRedirect("../index.jsp?error=sinSesion");
                                 }
                             %>
-                            <div class="card-header bg-secondary text-white">
-                                <h4 class="mb-0">Registrar nuevo Ticket</h4>
-                            </div>
+                           
                             <form action="<%= request.getContextPath()%>/TicketsController?accion=registrar" method="post">
                                 <div class="card-body">
                                     <input type="hidden" name="accion" value="registrar">

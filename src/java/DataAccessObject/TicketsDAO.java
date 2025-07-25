@@ -12,6 +12,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.sql.Types;
+import java.util.Date;
 
 /**
  *
@@ -48,6 +49,34 @@ public class TicketsDAO extends ConexionMySQL implements IBaseDAO<TicketsBE> {
             return false;
         }
 
+    }
+
+    public ArrayList<TicketsBE> listarTicketsPorTecnico(int idTecnico) throws Exception {
+        ArrayList<TicketsBE> lista = new ArrayList<>();
+        String sql = "SELECT * FROM tickets WHERE id_tecnico = ? && (estado = 'en_proceso' || estado = 'derivado')";
+
+        try (Connection cn = getConnection(); PreparedStatement ps = cn.prepareStatement(sql)) {
+
+            ps.setInt(1, idTecnico);
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                TicketsBE t = new TicketsBE();
+                t.setIdTicket(rs.getInt("id_ticket"));
+                t.setTitulo(rs.getString("titulo"));
+                t.setDescripcion(rs.getString("descripcion"));
+                t.setEstado(rs.getString("estado"));
+                t.setPrioridad(rs.getString("prioridad"));
+                t.setIdUsuario(rs.getInt("id_usuario"));
+                t.setIdTecnico(rs.getInt("id_tecnico"));
+                t.setFechaCreacion(rs.getTimestamp("fecha_creacion"));
+                t.setFechaCierre(rs.getTimestamp("fecha_cierre"));
+                lista.add(t);
+            }
+        } catch (SQLException e) {
+            throw new Exception("Error al listar tickets: " + e.getMessage(), e);
+        }
+        return lista;
     }
 
     @Override
@@ -196,4 +225,78 @@ public class TicketsDAO extends ConexionMySQL implements IBaseDAO<TicketsBE> {
         return lista;
     }
 
+    public ArrayList<TicketsBE> listarPorTecnico(int idTecnico) throws Exception {
+        ArrayList<TicketsBE> lista = new ArrayList<>();
+
+        String sql = "SELECT * FROM tickets WHERE id_tecnico = ?";
+
+        try (Connection cn = getConnection(); PreparedStatement ps = cn.prepareStatement(sql)) {
+
+            ps.setInt(1, idTecnico);
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                TicketsBE t = new TicketsBE();
+                t.setIdTicket(rs.getInt("id_ticket"));
+                t.setTitulo(rs.getString("titulo"));
+                t.setDescripcion(rs.getString("descripcion"));
+                t.setFechaCreacion(rs.getTimestamp("fecha_creacion"));
+                t.setEstado(rs.getString("estado"));
+                t.setPrioridad(rs.getString("prioridad"));
+                t.setIdTecnico(rs.getInt("id_tecnico"));
+                lista.add(t);
+            }
+
+        } catch (Exception e) {
+            throw new Exception("Error al listar tickets asignados al técnico", e);
+        }
+
+        return lista;
+    }
+
+    public ArrayList<TicketsBE> listarTicketsPorEstadoYtecnico(int idTecnico, String estado) throws Exception {
+        ArrayList<TicketsBE> lista = new ArrayList<>();
+        String sql = "SELECT * FROM tickets WHERE id_tecnico = ? AND estado = ?";
+        try (Connection cn = getConnection(); PreparedStatement ps = cn.prepareStatement(sql)) {
+
+            ps.setInt(1, idTecnico);
+            ps.setString(2, estado);
+
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                TicketsBE t = new TicketsBE();
+                t.setIdTicket(rs.getInt("id_ticket"));
+                t.setTitulo(rs.getString("titulo"));
+                t.setDescripcion(rs.getString("descripcion"));
+                t.setEstado(rs.getString("estado"));
+                t.setPrioridad(rs.getString("prioridad"));
+                t.setIdUsuario(rs.getInt("id_usuario"));
+                t.setIdTecnico(rs.getInt("id_tecnico"));
+                t.setFechaCreacion(rs.getTimestamp("fecha_creacion"));
+                t.setFechaCierre(rs.getTimestamp("fecha_cierre"));
+                lista.add(t);
+            }
+        }
+        return lista;
+    }
+
+    public void actualizarEstado(int idTicket, String nuevoEstado) throws Exception {
+        String sql = "UPDATE tickets SET estado = ? WHERE id_ticket = ?";
+        try (Connection cn = getConnection(); PreparedStatement ps = cn.prepareStatement(sql)) {
+            ps.setString(1, nuevoEstado);
+            ps.setInt(2, idTicket);
+            ps.executeUpdate();
+        }
+    }
+
+   
+public void actualizarEstadoYFechaCierre(int idTicket, String nuevoEstado, java.util.Date fechaCierre) throws Exception {
+    String sql = "UPDATE tickets SET estado = ?, fecha_cierre = ? WHERE id_ticket = ?";
+    try (Connection conn = getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+        ps.setString(1, nuevoEstado);
+        ps.setTimestamp(2, new java.sql.Timestamp(fechaCierre.getTime())); // conversión aquí
+        ps.setInt(3, idTicket);
+        ps.executeUpdate();
+    }
+}
 }

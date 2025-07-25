@@ -188,3 +188,10 @@ CREATE TABLE valor_atributo_inventario (
 ALTER TABLE tickets 
 MODIFY estado ENUM('abierto', 'en_proceso', 'cerrado', 'solicitado', 'derivado') DEFAULT 'solicitado';
 
+INSERT INTO tecnicos (id_tecnico, id_usuario, especialidad, estado)
+VALUES (1, 3, 'Redes', 'activo');
+
+INSERT INTO tecnicos (id_tecnico, id_usuario, especialidad, estado)
+VALUES (2, 4, 'Hardware', 'activo');
+
+

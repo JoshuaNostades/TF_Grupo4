@@ -44,7 +44,6 @@
             </a>
             <div class="collapse" id="gestionMenu">
                 <ul class="nav flex-column ms-4">
-                    <li><a href="<%= request.getContextPath()%>/InformesController" class="nav-link text-light px-3 py-1"><i class="bi bi-file-earmark-bar-graph me-2"></i> Informes</a></li>
                     <li><a href="<%= request.getContextPath()%>/MensajeController" class="nav-link text-light px-3 py-1"><i class="bi bi-chat-dots me-2"></i> IrentChat</a></li>
 
                 </ul>
@@ -92,8 +91,7 @@
             <div class="collapse" id="tecnicosMenu">
                 <ul class="nav flex-column ms-4">
                     <li><a href="<%= request.getContextPath()%>/ListarUsuarioController?accion=soporte" class="nav-link text-light px-3 py-1"><i class="bi bi-eye me-2"></i> Visualización</a></li>
-                    <li><a href="#" class="nav-link text-light px-3 py-1"><i class="bi bi-bar-chart-line me-2"></i> Actividad</a></li>
-
+                    
                     <li><a href="<%= request.getContextPath()%>/AsistenciaController?accion=listarAsistencia" class="nav-link text-light px-3 py-1"><i class="bi bi-check-circle me-2"></i> Asistencia</a></li>
                 </ul>
             </div>
@@ -150,8 +148,8 @@
             </a>
             <div class="collapse" id="ticketsMenu">
                 <ul class="nav flex-column ms-4">
-                    <li><a href="#" class="nav-link text-light px-3 py-1"><i class="bi bi-tools me-2"></i> Gestion</a></li>
-                    <li><a href="#" class="nav-link text-light px-3 py-1"><i class="bi bi-clock-history me-2"></i> Historial</a></li>
+                    <li><a href="<%= request.getContextPath()%>/ListarTicketsdeTecnicosController?accion=misTickets" class="nav-link text-light px-3 py-1"><i class="bi bi-tools me-2"></i> Gestion</a></li>
+                    <li><a href="<%= request.getContextPath()%>/ListarTablaTicketTecnico" class="nav-link text-light px-3 py-1"><i class="bi bi-clock-history me-2"></i> Historial</a></li>
                 </ul>
             </div>
         </li>

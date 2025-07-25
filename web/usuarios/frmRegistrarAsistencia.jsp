@@ -38,7 +38,7 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>JSP Page</title>
+        <title>Asistencia</title>
         <%@ include file="/gui/Encabezado.jsp" %>
         <!-- Bootstrap 5.3.0 CSS -->
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -66,8 +66,8 @@
 
                 <div class="col-md-10 p-4 main-content">
                     <div class="card shadow-sm">
-                        <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
-                            <h4 class="mb-0">Lista de Usuarios administrativos</h4>
+                        <div class="card-header bg-secondary text-white d-flex justify-content-between align-items-center">
+                            <h4 class="mb-0">Registro de asistencia</h4>
                             <i class="bi bi-person-plus fs-4"></i>
                         </div>
                         <div class="card-body">

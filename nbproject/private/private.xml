@@ -3,9 +3,8 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/Smile%20Consulting/Documents/NetBeansProjects/TF_Grupo4/web/usuarios/frmAsignar.jsp</file>
-            <file>file:/C:/Users/Smile%20Consulting/Documents/NetBeansProjects/TF_Grupo4/src/java/Controller/TicketsController.java</file>
-            <file>file:/C:/Users/Smile%20Consulting/Documents/NetBeansProjects/TF_Grupo4/src/java/DataAccessObject/TicketsDAO.java</file>
+            <file>file:/C:/Users/soporte/Documents/NetBeansProjects/TF_Grupo4/src/java/Controller/AsistenciaController.java</file>
+            <file>file:/C:/Users/soporte/Documents/NetBeansProjects/TF_Grupo4/src/java/Controller/CerrarSesionController.java</file>
         </group>
     </open-files>
 </project-private>

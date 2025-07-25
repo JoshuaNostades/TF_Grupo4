@@ -7,6 +7,7 @@ package Controller;
 import BusinessEntity.TecnicoBE;
 import BusinessEntity.TicketsBE;
 import BusinessEntity.UsuarioBE;
+import BusinessLogic.TecnicoBL;
 import BusinessLogic.TicketsBL;
 import DataAccessObject.TecnicoDAO;
 import DataAccessObject.TicketsDAO;
@@ -27,7 +28,6 @@ import java.util.Date;
  *
  * @author Smile Consulting
  */
-
 @WebServlet(name = "TicketsController", urlPatterns = {"/TicketsController"})
 public class TicketsController extends HttpServlet {
 
@@ -72,45 +72,53 @@ public class TicketsController extends HttpServlet {
 
         String accion = request.getParameter("accion");
 
-        
-    if (accion == null || accion.equals("especializado")) {
+        if (accion == null || accion.equals("especializado")) {
 
-        TicketsBL BL = new TicketsBL();
-        ArrayList<TicketsBE> listaTickets = BL.ReadAll();
-        request.setAttribute("listaTickets", listaTickets);
-        request.getRequestDispatcher("/usuarios/frmTickets.jsp").forward(request, response);
+            TicketsBL BL = new TicketsBL();
+            ArrayList<TicketsBE> listaTickets = BL.ReadAll();
+            request.setAttribute("listaTickets", listaTickets);
+            request.getRequestDispatcher("/usuarios/frmTickets.jsp").forward(request, response);
 
-    } else if (accion.equals("asignar")) {
+        } else if (accion.equals("asignar")) {
 
-        TicketsBL BL = new TicketsBL();
-        ArrayList<TicketsBE> listaTickets = BL.ReadAll();
-        TecnicoDAO daos = new TecnicoDAO();
-        ArrayList<UsuarioBE> listaTecnicos = daos.listarTecnicos();
+            TicketsBL BL = new TicketsBL();
+            ArrayList<TicketsBE> listaTickets = BL.ReadAll();
+            TecnicoDAO daos = new TecnicoDAO();
+            ArrayList<UsuarioBE> listaTecnicos = daos.listarTecnicos();
 
-        request.setAttribute("listaTecnicos", listaTecnicos);
-        request.setAttribute("listaTicketsAsignar", listaTickets);
-        request.getRequestDispatcher("/usuarios/frmAsignar.jsp").forward(request, response);
+            request.setAttribute("listaTecnicos", listaTecnicos);
+            request.setAttribute("listaTicketsAsignar", listaTickets);
 
-    } else if (accion.equals("filtrar")) {
+            try {
+                TecnicoBL tecnicoBL = new TecnicoBL();
+                ArrayList<TecnicoBE> listaDeTecnicos = tecnicoBL.listarTodos();
+                request.setAttribute("listaTecnicoBE", listaDeTecnicos);
+            } catch (Exception e) {
+                e.printStackTrace();
+                request.setAttribute("error", "Error al obtener la lista de técnicos: " + e.getMessage());
+            }
 
-        ArrayList<TicketsBE> listaFiltrada;
-        String estadoFiltro = request.getParameter("estadoFiltro");
+            request.getRequestDispatcher("/usuarios/frmAsignar.jsp").forward(request, response);
 
-        if (estadoFiltro == null || estadoFiltro.equals("todos")) {
-            listaFiltrada = new TicketsDAO().ReadAll();
+        } else if (accion.equals("filtrar")) {
+
+            ArrayList<TicketsBE> listaFiltrada;
+            String estadoFiltro = request.getParameter("estadoFiltro");
+
+            if (estadoFiltro == null || estadoFiltro.equals("todos")) {
+                listaFiltrada = new TicketsDAO().ReadAll();
+            } else {
+                listaFiltrada = TicketsDAO.obtenerTicketsPorEstado(estadoFiltro);
+            }
+
+            request.setAttribute("listaTicketsAsignar", listaFiltrada);
+
+            request.getRequestDispatcher("TicketsController?accion=asignar").forward(request, response);
+
         } else {
-            listaFiltrada = TicketsDAO.obtenerTicketsPorEstado(estadoFiltro);
+            // Otra acción o acción desconocida
+            response.sendError(HttpServletResponse.SC_NOT_FOUND, "Acción no reconocida");
         }
-
-        request.setAttribute("listaTicketsAsignar", listaFiltrada);
-       
-        request.getRequestDispatcher("TicketsController?accion=asignar").forward(request, response);
-
-    } else {
-        // Otra acción o acción desconocida
-        response.sendError(HttpServletResponse.SC_NOT_FOUND, "Acción no reconocida");
-    }
-        
 
     }
 
@@ -128,63 +136,91 @@ public class TicketsController extends HttpServlet {
 
         String accion = request.getParameter("accion");
 
-        int idUsuario = Integer.parseInt(request.getParameter("idUsuario"));
+        if (accion == null || accion.trim().isEmpty()) {
+            response.sendRedirect("RequerimientoController?msg=accion_no_valida");
+            return;
+        }
 
+        // ACCIÓN: REGISTRAR
         if ("registrar".equals(accion)) {
             try {
-                // Recoge datos del formulario
+                int idUsuario = 0;
+                try {
+                    idUsuario = Integer.parseInt(request.getParameter("idUsuario"));
+                    if (idUsuario == 0) {
+                        response.sendRedirect("RequerimientoController?msg=idUsuario_vacio");
+                        return;
+                    }
+                } catch (NumberFormatException e) {
+                    response.sendRedirect("RequerimientoController?msg=idUsuario_invalido");
+                    return;
+                }
+
                 String titulo = request.getParameter("titulo");
                 String descripcion = request.getParameter("descripcion");
 
-                // Obtiene el usuario desde la sesión
+                if (titulo == null || titulo.trim().isEmpty()
+                        || descripcion == null || descripcion.trim().isEmpty()) {
+                    response.sendRedirect("RequerimientoController?msg=campos_vacios");
+                    return;
+                }
+
                 HttpSession sesion = request.getSession();
                 UsuarioBE usuario = (UsuarioBE) sesion.getAttribute("usuario");
 
-                // Crea el nuevo ticket
                 TicketsBE ticket = new TicketsBE();
                 ticket.setTitulo(titulo);
                 ticket.setDescripcion(descripcion);
                 ticket.setEstado("Solicitado");
-                ticket.setPrioridad("sin evaluar"); // si quieres dejarlo sin prioridad inicialmente
+                ticket.setPrioridad("sin evaluar");
                 ticket.setIdUsuario(idUsuario);
-                ticket.setIdTecnico(0); // o null si tu BE lo soporta
+                ticket.setIdTecnico(0);
+
                 SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
                 Date soloFecha = sdf.parse(sdf.format(new Date()));
                 ticket.setFechaCreacion(soloFecha);
 
-                // Guardar en la BD
                 TicketsDAO dao = new TicketsDAO();
                 dao.insertarTicket(ticket);
 
-                // Redirigir o mostrar mensaje
                 response.sendRedirect("RequerimientoController?msg=exito");
             } catch (Exception e) {
                 e.printStackTrace();
                 response.sendRedirect("RequerimientoController?msg=error");
             }
-        } else if ("actualizar".equals(accion)) {
 
+        } else if ("actualizar".equals(accion)) {
             try {
                 int idTicket = Integer.parseInt(request.getParameter("idTicket"));
                 int idTecnico = Integer.parseInt(request.getParameter("idTecnicos"));
-                String estado = "derivado";
                 String prioridad = request.getParameter("prioridad");
 
-                TicketsDAO dao = new TicketsDAO();
-                boolean actualizado = dao.actualizarAsignacionTecnico(idTicket, estado, prioridad, idTecnico);
-
-                if (actualizado) {
-                    request.setAttribute("mensaje", "✅ Ticket actualizado correctamente.");
+                if (prioridad == null || prioridad.trim().isEmpty()) {
+                    request.setAttribute("mensaje", "⚠️ Prioridad no especificada.");
                 } else {
-                    request.setAttribute("mensaje", "⚠️ No se pudo actualizar el ticket.");
-                }
+                    String estado = "derivado";
+                    TicketsDAO dao = new TicketsDAO();
+                    boolean actualizado = dao.actualizarAsignacionTecnico(idTicket, estado, prioridad, idTecnico);
 
+                    if (actualizado) {
+                        request.setAttribute("mensaje", "✅ Ticket actualizado correctamente.");
+                    } else {
+                        request.setAttribute("mensaje", "⚠️ No se pudo actualizar el ticket.");
+                    }
+                }
             } catch (NumberFormatException e) {
                 request.setAttribute("mensaje", "❌ Error: ID inválido.");
+            } catch (Exception e) {
+                request.setAttribute("mensaje", "❌ Error inesperado al actualizar el ticket.");
+                e.printStackTrace();
             }
 
-            request.getRequestDispatcher("TicketsController?accion=asignar").forward(request, response);
+            response.sendRedirect("TicketsController?accion=asignar&mensaje=Ticket actualizado correctamente");
+
+        } else {
+            response.sendRedirect("RequerimientoController?msg=accion_desconocida");
         }
+
     }
 
     /**

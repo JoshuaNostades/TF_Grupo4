@@ -5,11 +5,13 @@
 package DataAccessObject;
 
 import BusinessEntity.TecnicoBE;
+import BusinessEntity.TicketsBE;
 import BusinessEntity.UsuarioBE;
 import DataAccessObject.UsuarioDAO;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -129,11 +131,9 @@ public class TecnicoDAO extends ConexionMySQL implements IBaseDAO<TecnicoBE> {
 
     @Override
     public boolean Update(TecnicoBE input) {
-    UsuarioDAO daoUsuario = new UsuarioDAO();
-    
-         try {
-            
-           
+        UsuarioDAO daoUsuario = new UsuarioDAO();
+
+        try {
 
             // Actualizar usuario
             boolean usuarioActualizado = daoUsuario.Update(input.getUsuario());
@@ -156,7 +156,7 @@ public class TecnicoDAO extends ConexionMySQL implements IBaseDAO<TecnicoBE> {
                 }
             }
 
-             getConnection().commit();
+            getConnection().commit();
             return true;
 
         } catch (Exception e) {
@@ -216,8 +216,8 @@ public class TecnicoDAO extends ConexionMySQL implements IBaseDAO<TecnicoBE> {
             return false;
         }
     }
-    
-    public  int obtenerIdTecnicoDesdeUsuario(int idUsuario) {
+
+    public int obtenerIdTecnicoDesdeUsuario(int idUsuario) {
         int idTecnico = -1;
         try {
             String sql = "SELECT id_tecnico FROM tecnicos WHERE id_usuario = ?";
@@ -232,30 +232,60 @@ public class TecnicoDAO extends ConexionMySQL implements IBaseDAO<TecnicoBE> {
         }
         return idTecnico;
     }
-    
 
-  
-  
-  public ArrayList<UsuarioBE> listarTecnicos() {
-    ArrayList<UsuarioBE> lista = new ArrayList<>();
-    String sql = "SELECT * FROM usuarios WHERE rol = 'Soporte tecnico'";
+    public ArrayList<UsuarioBE> listarTecnicos() {
+        ArrayList<UsuarioBE> lista = new ArrayList<>();
+        String sql = "SELECT * FROM usuarios WHERE rol = 'Soporte tecnico'";
 
-    try (Connection con = getConnection();
-         PreparedStatement ps = con.prepareStatement(sql);
-         ResultSet rs = ps.executeQuery()) {
+        try (Connection con = getConnection(); PreparedStatement ps = con.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
 
-        while (rs.next()) {
-            UsuarioBE u = new UsuarioBE();
-            u.setIdUsuario(rs.getInt("id_usuario"));
-            u.setNombre(rs.getString("nombre"));
-            u.setCorreo(rs.getString("correo"));
-            u.setRol(rs.getString("rol"));
-            lista.add(u);
+            while (rs.next()) {
+                UsuarioBE u = new UsuarioBE();
+                u.setIdUsuario(rs.getInt("id_usuario"));
+                u.setNombre(rs.getString("nombre"));
+                u.setCorreo(rs.getString("correo"));
+                u.setRol(rs.getString("rol"));
+                lista.add(u);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-    } catch (Exception e) {
-        e.printStackTrace();
+        return lista;
     }
-    return lista;
-}
+
+    public List<TecnicoBE> listarTecnicosActivos() throws Exception {
+        List<TecnicoBE> lista = new ArrayList<>();
+
+        String sql = "SELECT t.id_tecnico, t.especialidad, t.estado, "
+                + "u.id_usuario, u.nombre, u.correo "
+                + "FROM tecnicos t "
+                + "JOIN usuarios u ON t.id_usuario = u.id_usuario "
+                + "WHERE t.estado = 'activo'";
+
+        try (Connection cn = getConnection(); PreparedStatement ps = cn.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
+
+            while (rs.next()) {
+                TecnicoBE tecnico = new TecnicoBE();
+                tecnico.setIdTecnico(rs.getInt("id_tecnico"));
+                tecnico.setEspecialidad(rs.getString("especialidad"));
+                tecnico.setEstado(rs.getString("estado"));
+
+                UsuarioBE usuario = new UsuarioBE();
+                usuario.setIdUsuario(rs.getInt("id_usuario"));
+                usuario.setNombre(rs.getString("nombre"));
+                usuario.setCorreo(rs.getString("correo"));
+
+                tecnico.setUsuario(usuario);
+                lista.add(tecnico);
+            }
+        }
+        return lista;
+    }
     
+    
+   
+    
+   
+    
+
 }

@@ -12,7 +12,7 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>JSP Page</title>
+        <title>Configuracion</title>
         <%@ include file="/gui/Encabezado.jsp" %>
     </head>
     <body class="min-vh-100 d-flex">
