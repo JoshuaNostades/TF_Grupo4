@@ -101,9 +101,9 @@ public class AsistenciaController extends HttpServlet {
                 LocalDate hoy = LocalDate.now();
                 request.setAttribute("fechaHoy", hoy.toString());
 
-                request.getRequestDispatcher("usuarios/frmRegistrarAsistencia.jsp").forward(request, response);
+                request.getRequestDispatcher("/usuarios/frmRegistrarAsistencia.jsp").forward(request, response);
             } else {
-                response.sendRedirect("/login.jsp?msg=sin_sesion");
+                response.sendRedirect("index.jsp?msg=sin_sesion");
             }
 
         } else {

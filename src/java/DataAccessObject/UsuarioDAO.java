@@ -283,6 +283,7 @@ public class UsuarioDAO extends ConexionMySQL implements IBaseDAO<UsuarioBE> {
 
         return usuario;
     }
+
     public List<UsuarioBE> listarTodosMenos(int idActual) {
         List<UsuarioBE> lista = new ArrayList<>();
         String sql = "SELECT * FROM usuarios WHERE id_usuario != ?";
@@ -301,5 +302,50 @@ public class UsuarioDAO extends ConexionMySQL implements IBaseDAO<UsuarioBE> {
             e.printStackTrace();
         }
         return lista;
+    }
+
+    public UsuarioBE obtenerUsuarioPorId(int idUsuario) {
+        String sql = "SELECT id_usuario, nombre, correo, contrasena, rol FROM usuarios WHERE id_usuario = ?";
+        UsuarioBE usuario = null;
+
+        try (Connection con = getConnection(); PreparedStatement ps = con.prepareStatement(sql)) {
+
+            ps.setInt(1, idUsuario);
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                usuario = new UsuarioBE();
+                usuario.setIdUsuario(rs.getInt("id_usuario"));
+                usuario.setNombre(rs.getString("nombre"));
+                usuario.setCorreo(rs.getString("correo"));
+                usuario.setContrasena(rs.getString("contrasena"));
+                usuario.setRol(rs.getString("rol")); // Asegúrate de tener este campo en el modelo
+            }
+
+            rs.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return usuario;
+    }
+
+    public boolean actualizarAdministrativo(UsuarioBE usuario) {
+        String sql = "UPDATE usuarios SET nombre = ?, correo = ?, contrasena = ?, rol = ? WHERE id_usuario = ?";
+        try (Connection con = getConnection(); PreparedStatement ps = con.prepareStatement(sql)) {
+
+            ps.setString(1, usuario.getNombre());
+            ps.setString(2, usuario.getCorreo());
+            ps.setString(3, usuario.getContrasena());
+            ps.setString(4, usuario.getRol());
+            ps.setInt(5, usuario.getIdUsuario());
+
+            int filasAfectadas = ps.executeUpdate();
+            return filasAfectadas > 0;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 }

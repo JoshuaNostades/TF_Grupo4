@@ -8,6 +8,7 @@ import BusinessEntity.TicketsBE;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.sql.Types;
@@ -119,6 +120,25 @@ public class TicketsDAO extends ConexionMySQL implements IBaseDAO<TicketsBE> {
 
     }
 
+    public boolean actualizarAsignacionTecnico(int idTicket, String estado, String prioridad, int idTecnico) {
+        String sql = "UPDATE tickets SET estado = ?, prioridad = ?, id_tecnico = ? WHERE id_ticket = ?";
+
+        try (Connection con = getConnection(); PreparedStatement ps = con.prepareStatement(sql)) {
+
+            ps.setString(1, estado);
+            ps.setString(2, prioridad);
+            ps.setInt(3, idTecnico);
+            ps.setInt(4, idTicket);
+
+            int filasAfectadas = ps.executeUpdate();
+            return filasAfectadas > 0;
+
+        } catch (SQLException e) {
+            System.err.println("Error al actualizar ticket: " + e.getMessage());
+            return false;
+        }
+    }
+
     public boolean insertarTicket(TicketsBE ticket) {
         String sql = "INSERT INTO tickets (titulo, descripcion, estado, prioridad, id_usuario, id_tecnico, fecha_creacion) "
                 + "VALUES (?, ?, ?, ?, ?, ?,?)";
@@ -145,6 +165,35 @@ public class TicketsDAO extends ConexionMySQL implements IBaseDAO<TicketsBE> {
             e.printStackTrace();
         }
         return false;
+    }
+
+    public static ArrayList<TicketsBE> obtenerTicketsPorEstado(String estado) {
+        ArrayList<TicketsBE> lista = new ArrayList<>();
+        String sql = "SELECT * FROM tickets WHERE estado = ?";
+
+        try (Connection cn = getConnection(); PreparedStatement pst = cn.prepareStatement(sql)) {
+
+            pst.setString(1, estado);
+            ResultSet rs = pst.executeQuery();
+
+            while (rs.next()) {
+                TicketsBE t = new TicketsBE();
+                t.setIdTicket(rs.getInt("id_ticket"));
+                t.setTitulo(rs.getString("titulo"));
+                t.setDescripcion(rs.getString("descripcion"));
+                t.setEstado(rs.getString("estado"));
+                t.setPrioridad(rs.getString("prioridad"));
+                t.setIdUsuario(rs.getInt("id_usuario"));
+                t.setIdTecnico(rs.getInt("id_tecnico"));
+                t.setFechaCreacion(rs.getDate("fecha_creacion"));
+                lista.add(t);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return lista;
     }
 
 }

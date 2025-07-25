@@ -163,7 +163,7 @@ public class LoginUsuarioServlet extends HttpServlet {
                         response.sendRedirect("RequerimientoController");
                         break;
                     case "Soporte tecnico":
-                        response.sendRedirect("gui/Principal.jsp");
+                        response.sendRedirect("SesionController");
                         break;
                     case "Soporte especializado":
                         response.sendRedirect("ListarUsuarioController");

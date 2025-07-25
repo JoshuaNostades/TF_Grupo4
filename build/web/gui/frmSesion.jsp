@@ -27,7 +27,7 @@
 
                 <div class="col-md-10 p-4 main-content">
                     <div class="card shadow-sm">
-                        <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+                        <div class="card-header bg-danger text-white d-flex justify-content-between align-items-center">
                             <h4 class="mb-0">Lista de sesiones</h4>
                             <i class="bi bi-person-plus fs-4"></i>
                         </div>
@@ -39,7 +39,7 @@
 
 
                            <table class="table table-sm table-bordered table-striped small">
-                                <thead class="table-dark text-center">
+                                <thead class="table-dark text-center table table-bordered rounded">
                                     <tr>
                                         <th>ID</th>
                                         <th>ID Usuario</th>

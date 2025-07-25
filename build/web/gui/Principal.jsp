@@ -126,24 +126,24 @@
 
         <!-- INICIO -->
         <li class="nav-item">
-            <a class="nav-link d-flex justify-content-between align-items-center text-dark px-3 py-2"
+            <a class="nav-link d-flex justify-content-between align-items-center text-light px-3 py-2"
                data-bs-toggle="collapse" href="#inicioMenu" role="button" aria-expanded="false" aria-controls="inicioMenu">
                 <span><i class="bi bi-house-door me-2"></i> Inicio</span>
                 <i class="bi bi-chevron-down"></i>
             </a>
             <div class="collapse" id="inicioMenu">
                 <ul class="nav flex-column ms-4">
-                    <li><a href="#" class="nav-link text-dark px-3 py-1"><i class="bi bi-journal-code me-2"></i> Guía</a></li>
-                    <li><a href="#" class="nav-link text-dark px-3 py-1"><i class="bi bi-envelope-at me-2"></i> Correo</a></li>
-                    <li><a href="<%= request.getContextPath()%>/MensajeController" class="nav-link text-dark px-3 py-1"><i class="bi bi-chat-dots me-2"></i> IrentChat</a></li>
+                    <li><a href="<%= request.getContextPath()%>/ListarGuiaController" class="nav-link text-light px-3 py-1"><i class="bi bi-journal-code me-2"></i> Guía</a></li>
+                    <li><a href="<%= request.getContextPath()%>/MensajeController" class="nav-link text-light px-3 py-1"><i class="bi bi-chat-dots me-2"></i> IrentChat</a></li>
                 </ul>
             </div>
+
         </li>
 
 
         <%-- Solo ver TICKETS para Soporte técnico --%>
         <li class="nav-item">
-            <a class="nav-link d-flex justify-content-between align-items-center text-dark px-3 py-2"
+            <a class="nav-link d-flex justify-content-between align-items-center text-light px-3 py-2"
                data-bs-toggle="collapse" href="#ticketsMenu" role="button" aria-expanded="false" aria-controls="ticketsMenu">
                 <span><i class="bi bi-ticket-perforated-fill me-2"></i> Tickets</span>
                 <i class="bi bi-chevron-down"></i>
@@ -161,15 +161,15 @@
 
         <!-- TÉCNICOS -->
         <li class="nav-item">
-            <a class="nav-link d-flex justify-content-between align-items-center text-dark px-3 py-2"
+            <a class="nav-link d-flex justify-content-between align-items-center text-light px-3 py-2"
                data-bs-toggle="collapse" href="#tecnicosMenu" role="button" aria-expanded="false" aria-controls="tecnicosMenu">
                 <span><i class="bi bi-person-badge me-2"></i> Perfil</span>
                 <i class="bi bi-chevron-down"></i>
             </a>
             <div class="collapse" id="tecnicosMenu">
                 <ul class="nav flex-column ms-4">
-                    <li><a href="<%= request.getContextPath()%>/SesionController" class="nav-link text-dark px-3 py-1"><i class="bi bi-laptop me-2"></i> Sesiones</a></li>
-                    <li><a href="<%= request.getContextPath()%>/AsistenciaController?accion=registrarAsistencia" class="nav-link text-dark px-3 py-1"><i class="bi bi-check-circle me-2"></i> Asistencia</a></li>
+                    <li><a href="<%= request.getContextPath()%>/SesionController" class="nav-link text-light px-3 py-1"><i class="bi bi-laptop me-2"></i> Sesiones</a></li>
+                    <li><a href="<%= request.getContextPath()%>/AsistenciaController?accion=registrarAsistencia" class="nav-link text-light px-3 py-1"><i class="bi bi-check-circle me-2"></i> Asistencia</a></li>
 
                 </ul>
             </div>
@@ -181,6 +181,21 @@
         <% } else if ("Administrativo".equals(rol)) {%>
 
 
+        <!-- INICIO -->
+        <li class="nav-item">
+            <a class="nav-link d-flex justify-content-between align-items-center text-light px-3 py-2"
+               data-bs-toggle="collapse" href="#inicioMenu" role="button" aria-expanded="false" aria-controls="inicioMenu">
+                <span><i class="bi bi-house-door me-2"></i> Mi perfil</span>
+                <i class="bi bi-chevron-down"></i>
+            </a>
+            <div class="collapse" id="inicioMenu">
+                <ul class="nav flex-column ms-4">
+                    <li><a href="<%= request.getContextPath()%>/ConfigAdminController" class="nav-link text-light px-3 py-1"><i class="bi bi-journal-code me-2"></i> Configuracion</a></li>
+
+                </ul>
+            </div>
+        </li>
+
         <%-- Solo ver TICKETS para Soporte técnico --%>
         <li class="nav-item">
             <a class="nav-link d-flex justify-content-between align-items-center text-light px-3 py-2"
@@ -191,11 +206,15 @@
             <div class="collapse" id="ticketsMenu">
                 <ul class="nav flex-column ms-4">
                     <li><a href="<%= request.getContextPath()%>/RequerimientoController" class="nav-link text-light px-3 py-1"><i class="bi bi-chat-dots me-2"></i>Requerimiento</a></li>
+                    <li><a href="<%= request.getContextPath()%>/RequerimientoController" class="nav-link text-light px-3 py-1"><i class="bi bi-chat-dots me-2"></i>Mis tickets</a></li>    
                     <li><a href="<%= request.getContextPath()%>/MensajeController" class="nav-link text-light px-3 py-1"><i class="bi bi-chat-dots me-2"></i>Chat</a></li>
 
                 </ul>
             </div>
         </li>
+
+
+
 
         <% }%>
 

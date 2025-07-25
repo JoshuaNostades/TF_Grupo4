@@ -13,9 +13,9 @@
 <!DOCTYPE html>
 <%
     // Suponiendo que tienes el id_tecnico en sesión
-    Integer idTecnico = (Integer) session.getAttribute("idd");
+    Integer idTecnico = (Integer) session.getAttribute("idTecnico");
     if (idTecnico == null) {
-        response.sendRedirect("login.jsp"); // Redirecciona si no hay sesión
+        response.sendRedirect("index.jsp"); // Redirecciona si no hay sesión
         return;
     }
 

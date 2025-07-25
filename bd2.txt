@@ -132,31 +132,8 @@ VALUES ('Joshua', 'joshua@example.com', '123', 'Soporte tecnico');
 INSERT INTO usuarios (nombre, correo, contrasena, rol)
 VALUES ('Jose', 'jose@example.com', '123', 'Soporte tecnico');
 
-insert into tecnicos (id_tecnico, id_usuario, especialidad, estado) values (1,2,'Soporte especializado','activo');
-insert into tecnicos (id_tecnico, id_usuario, especialidad, estado) values (2,4,'Soporte tecnico','activo');
-INSERT INTO tickets (id_ticket, titulo, descripcion, estado, prioridad, id_usuario, id_tecnico, fecha_creacion) VALUES (1, 'Problema con impresora', 'La impresora no responde al enviar trabajos desde red.', 'abierto', 'alta', 1, 1, NOW());
-INSERT INTO tickets (id_ticket, titulo, descripcion, estado, prioridad, id_usuario, id_tecnico, fecha_creacion, fecha_cierre) VALUES (2, 'Actualización de software', 'Se necesita actualizar el software antivirus en todos los equipos del área contable.', 'cerrado', 'media', 1, 1, '2024-07-01 09:30:00', '2024-07-02 11:15:00');
-INSERT INTO tickets (id_ticket, titulo, descripcion, estado, prioridad, id_usuario, id_tecnico, fecha_creacion) VALUES (3, 'Reemplazo de monitor', 'El monitor del equipo LEN123 presenta fallas de imagen.', 'en_proceso', 'baja', 1, 1, '2024-07-10 14:45:00');
-INSERT INTO tickets (id_ticket, titulo, descripcion, estado, prioridad, id_usuario, id_tecnico, fecha_creacion) VALUES (4, 'Problema con cpu', 'La cpu no responde al enviar trabajos desde red.', 'abierto', 'alta', 1, 1, NOW());
-INSERT INTO tickets (id_ticket, titulo, descripcion, estado, prioridad, id_usuario, id_tecnico, fecha_creacion) VALUES (5, 'Problema con vpn', 'La vpn no responde al enviar trabajos desde red.', 'abierto', 'alta', 1, 1, NOW());
 
 
-
-INSERT INTO `asistencias` (
-  `id_asistencia`,
-  `id_tecnico`,
-  `fecha`,
-  `hora_entrada`,
-  `hora_salida`,
-  `ubicacion`
-) VALUES (
-  1,                  -- id_asistencia
-  1,                  -- id_tecnico
-  '2025-07-17',       -- fecha (hoy)
-  '08:00:00',         -- hora_entrada
-  '17:00:00',         -- hora_salida
-  'Local 5'   -- ubicacion 
-);
 
 ALTER TABLE sesion MODIFY navegador VARCHAR(1500);
 
@@ -208,4 +185,6 @@ CREATE TABLE valor_atributo_inventario (
   FOREIGN KEY (id_atributo) REFERENCES atributo(id_atributo)
 );
 
+ALTER TABLE tickets 
+MODIFY estado ENUM('abierto', 'en_proceso', 'cerrado', 'solicitado', 'derivado') DEFAULT 'solicitado';
 
